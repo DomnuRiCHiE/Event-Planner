@@ -2,12 +2,12 @@ import { Schedule } from "./schedule.model";
 import { User } from "./user.model";
 
 export interface Event {
-    eventId: number;
+    eventId?: number;
     name: string;
     startDate: Date;
     endDate: Date;
     location: string;
-    organizers: User[];
-    attendees: User[];
-    schedule: Schedule[];
+    organizers?: User[];
+    attendees?: User[];
+    schedule?: Schedule[];
 }
