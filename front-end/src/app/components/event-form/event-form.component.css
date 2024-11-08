@@ -1,72 +1,125 @@
-/* event-form.component.css */
-
+/* Container and form setup */
 .container {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 1rem;
-  background-color: #f9f9f9;
-  border-radius: 8px;
+  margin-top: 10%;
+  padding: 20px;
+  /* Make it have a dropshadow */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .event-form {
   display: flex;
   flex-direction: column;
+  gap: 20px;
+}
+
+/* Grid Layout for Event Name + Location */
+.form-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 15px;
+  display: block;
+  /* Ensures label is above the input */
 }
 
-label {
-  display: block;
-  margin-bottom: 0.5rem;
+.form-group label {
   font-weight: bold;
+  margin-bottom: 5px;
+  margin-right: 20px;
 }
 
-p-multiSelect,
-p-calendar,
-input[type="text"] {
+/* Adjusting grid for Date Inputs */
+.form-row .form-group {
+  flex: 1 1 48%;
+  /* Keeps the 2-column layout for other sections */
+}
+
+.form-group p-calendar {
   width: 100%;
+  /* Ensures the calendar input takes full width */
 }
 
-button[type="submit"],
-button[type="button"] {
-  display: block;
-  width: 100%;
-  padding: 0.75rem;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 0.25rem;
-  font-size: 1rem;
-  cursor: pointer;
-  margin-top: 1rem;
+/* I want the standard imputs to be taller */
+input{
+  height: 40px;
 }
 
-button[type="submit"]:hover,
-button[type="button"]:hover {
-  background-color: #0056b3;
-}
 
+/* Schedule Card Styling */
 .schedule-cards {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 20px;
 }
 
 .schedule-card {
-  flex: 1 1 calc(50% - 1rem);
-  margin-bottom: 1rem;
+  flex: 0 0 48%;
+  /* Ensures two cards per row */
+  margin-bottom: 15px;
+}
+
+.schedule-card-container {
+  width: 100%;
+}
+
+.schedule-card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
 }
 
 .remove-button {
-  margin-top: 1rem;
-  background-color: #dc3545;
-  border-color: #dc3545;
+  background-color: #f44336;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
 }
 
-.remove-button:hover {
-  background-color: #c82333;
-  border-color: #bd2130;
+.schedule-card-header {
+  font-weight: bold;
+}
+
+/* Button Styling */
+.add-button,
+.submit-button {
+  width: 48%;
+  /* Reduced button width for spacing */
+  margin-top: 10px;
+  padding: 10px;
+}
+
+.add-button {
+  background-color: #007bff;
+  border: none;
+}
+
+.submit-button {
+  background-color: #28a745;
+  border: none;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  /* Adds space between the two buttons */
+  margin-top: 15px;
+}
+
+/* Fixing the Calendar Inputs and Label Spacing */
+.p-calendar {
+  width: 100%;
+}
+
+.p-calendar input {
+  padding-left: 8px;
+  /* Adds space between input text and calendar icon */
 }

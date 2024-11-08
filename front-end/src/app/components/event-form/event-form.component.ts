@@ -33,10 +33,7 @@ export class EventFormComponent {
     schedule: [],
   };
 
-  schedules: Schedule[] = [
-    { description: 'Schedule 1', time: new Date() },
-    { description: 'Schedule 2', time: new Date() },
-  ];
+  schedules: Schedule[] = [];
 
   customSchedule: Schedule = {
     description: '',
@@ -48,7 +45,7 @@ export class EventFormComponent {
       ...this.customSchedule,
     };
     this.schedules.push(newSchedule);
-    this.customSchedule = { description: '', time: new Date() };
+    this.customSchedule = { description: '', time: new Date() };  // Resetting for new input
   }
 
   removeSchedule(index: number) {
