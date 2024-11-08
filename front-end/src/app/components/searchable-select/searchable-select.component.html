@@ -1,0 +1,7 @@
+<div class="input-container">
+  <label>{{ label }}</label>
+  <input type="text" [(ngModel)]="searchText" placeholder="Search..." class="input-field"/>
+  <select [(ngModel)]="selectedOption" class="input-field">
+    <option *ngFor="let option of options | filter:searchText">{{ option }}</option>
+  </select>
+</div>
