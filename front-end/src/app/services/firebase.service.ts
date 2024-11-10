@@ -19,14 +19,5 @@ export class FirebaseService {
 
     // Initialize Firebase
     initializeApp(firebaseConfig);
-    // Test Firebase Authentication by signing in anonymously
-    const auth = getAuth();
-    signInAnonymously(auth)
-      .then(() => {
-        console.log('Firebase Authentication Initialized and Test Sign-In Success');
-      })
-      .catch((error) => {
-        console.error('Error signing in anonymously:', error);
-      });
   }
 }
