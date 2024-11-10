@@ -24,6 +24,9 @@ import { Schedule } from '../../models/schedule.model';
     CardModule,
   ],
 })
+
+//TO DO orice include backend-ul
+
 export class EventFormComponent {
   event: Event = {
     name: '',

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { EventFormComponent } from './components/event-form/event-form.component';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -8,6 +9,7 @@ import { EventFormComponent } from './components/event-form/event-form.component
   standalone: true,
   imports: [
     EventFormComponent,
+    RouterOutlet
     // BrowserAnimationsModule is removed here and added to appConfig instead
   ],
 })

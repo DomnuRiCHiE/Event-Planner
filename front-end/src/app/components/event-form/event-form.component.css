@@ -65,6 +65,7 @@ input{
 
 .schedule-card-container {
   width: 100%;
+  padding: 10%;
 }
 
 .schedule-card-content {
