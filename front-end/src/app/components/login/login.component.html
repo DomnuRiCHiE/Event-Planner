@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Event</title>
+  <link rel="stylesheet" href="./app/components/login/login.component.css">
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Roboto:wght@300&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="background-overlay"></div>
+<div class="login-container">
+  <h2>Event Planner</h2>
+  <form id="login-form">
+    <div class="input-group">
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" placeholder="example@email.com" required>
+    </div>
+    <div class="input-group">
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" placeholder="Enter Password" required>
+    </div>
+    <button type="submit">Log in</button>
+    <p id="error-message"></p>
+  </form>
+</div>
+<script src="./app/components/login/script.js"></script>
+</body>
+</html>
