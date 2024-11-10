@@ -1,12 +1,17 @@
 import { Component } from '@angular/core';
+import { EventFormComponent } from './components/event-form/event-form.component';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css'],
+  standalone: true,
+  imports: [
+    EventFormComponent,
+    RouterOutlet
+    // BrowserAnimationsModule is removed here and added to appConfig instead
+  ],
 })
 export class AppComponent {
   title = 'front-end';
