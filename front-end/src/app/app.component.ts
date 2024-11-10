@@ -1,16 +1,18 @@
-import {Component, OnInit} from '@angular/core';
+import { Component } from '@angular/core';
+import { EventFormComponent } from './components/event-form/event-form.component';
 import { RouterOutlet } from '@angular/router';
-import {FirebaseService} from './services/firebase.service';
+
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css'],
+  standalone: true,
+  imports: [
+    EventFormComponent,
+    RouterOutlet
+    // BrowserAnimationsModule is removed here and added to appConfig instead
+  ],
 })
-export class AppComponent implements OnInit {
-  constructor(private firebaseService: FirebaseService) {}
-  ngOnInit() {
-    console.log('AppComponent initialized');
-  }
+export class AppComponent {
+  title = 'front-end';
 }

@@ -1,0 +1,126 @@
+/* Container and form setup */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  margin-top: 10%;
+  padding: 20px;
+  /* Make it have a dropshadow */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.event-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Grid Layout for Event Name + Location */
+.form-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.form-group {
+  margin-bottom: 15px;
+  display: block;
+  /* Ensures label is above the input */
+}
+
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  margin-right: 20px;
+}
+
+/* Adjusting grid for Date Inputs */
+.form-row .form-group {
+  flex: 1 1 48%;
+  /* Keeps the 2-column layout for other sections */
+}
+
+.form-group p-calendar {
+  width: 100%;
+  /* Ensures the calendar input takes full width */
+}
+
+/* I want the standard imputs to be taller */
+input{
+  height: 40px;
+}
+
+
+/* Schedule Card Styling */
+.schedule-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.schedule-card {
+  flex: 0 0 48%;
+  /* Ensures two cards per row */
+  margin-bottom: 15px;
+}
+
+.schedule-card-container {
+  width: 100%;
+  padding: 10%;
+}
+
+.schedule-card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.remove-button {
+  background-color: #f44336;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.schedule-card-header {
+  font-weight: bold;
+}
+
+/* Button Styling */
+.add-button,
+.submit-button {
+  width: 48%;
+  /* Reduced button width for spacing */
+  margin-top: 10px;
+  padding: 10px;
+}
+
+.add-button {
+  background-color: #007bff;
+  border: none;
+}
+
+.submit-button {
+  background-color: #28a745;
+  border: none;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  /* Adds space between the two buttons */
+  margin-top: 15px;
+}
+
+/* Fixing the Calendar Inputs and Label Spacing */
+.p-calendar {
+  width: 100%;
+}
+
+.p-calendar input {
+  padding-left: 8px;
+  /* Adds space between input text and calendar icon */
+}
