@@ -6,7 +6,7 @@ import {EventsListComponent} from './components/events-list/events-list.componen
 
 export const routes: Routes = [
     { path: 'event-form', component: EventFormComponent },
-    { path: 'events-list', component: EventsListComponent}
+    { path: 'events-list', component: EventsListComponent},
     { path: 'login', component: LoginComponent },
     { path: '', redirectTo: 'login', pathMatch: 'full'}
 ];
