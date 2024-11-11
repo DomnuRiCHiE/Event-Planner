@@ -1,0 +1,40 @@
+<div *ngIf="events.length > 0; else noEvents">
+  <ul class="no-bullet">
+    <li *ngFor="let event of events">
+      <div class="event-card">
+        <!-- Event Name -->
+        <h3>{{ event.name }}</h3>
+
+        <!-- Event Location and Date -->
+        <p>{{ event.location }}</p>
+        <p>{{ event.startDate | date: 'short' }} - {{ event.endDate | date: 'short' }}</p>
+
+        <!-- Attendees List -->
+        <div class="attendees">
+          <strong>Attendees:</strong>
+          <ul>
+            <li *ngFor="let attendee of event.attendees">{{ attendee.userId }}</li>
+          </ul>
+        </div>
+
+        <!-- Event Schedule -->
+        <div class="schedule">
+          <strong>Event Schedule:</strong>
+          <ul>
+            <li *ngFor="let item of event.schedule">
+              <span>{{ item.time | date: 'shortTime' }} - {{ item.description }}</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Button to view event details -->
+        <button (click)="viewEventDetails(event.eventId)">View Details</button>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<!-- If no events are available -->
+<ng-template #noEvents>
+  <p>No events to display.</p>
+</ng-template>
