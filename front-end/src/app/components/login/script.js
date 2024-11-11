@@ -23,13 +23,8 @@ document.getElementById("login-form").addEventListener("submit", function(event)
   const password = document.getElementById("password").value;
   const errorMessage = document.getElementById("error-message");
 
-  if (!validate_email(email)) {
-    errorMessage.textContent = "Adresa de email nu este valida.";
-    return;
-  }
-
-  if (password.length < 6) {
-    errorMessage.textContent = "Parola trebuie sa aiba cel putin 6 caractere.";
+  if (!validate_email(email) || password.length < 6) {
+    errorMessage.textContent = "Invalid email or password.";
     return;
   }
 
@@ -37,7 +32,7 @@ document.getElementById("login-form").addEventListener("submit", function(event)
 
   if (email === "test@gmail.com" && password === "parola123") {
     alert("Authentication successful!");
-    window.location.href = "./app/components/event-form/event-form.html";
+    window.location.href = "./app/components/login/dashboard.html";
   } else {
     errorMessage.textContent = "Incorrect email or password.";
   }
@@ -83,10 +78,10 @@ document.getElementById("login-form").addEventListener("submit", function(event)
 //     });
 // }
 //
-// function validate_email(email) {
-//   let expression = /^[^@]+@\w+(\.\w+)+\w$/
-//   return expression.test(email) === true;
-// }
+function validate_email(email) {
+  let expression = /^[^@]+@\w+(\.\w+)+\w$/
+  return expression.test(email) === true;
+}
 //
 // function validate_password(password) {
 //   return password.length >= 6;
