@@ -23,9 +23,8 @@ export class EventsListComponent implements OnInit {
     endDate: new Date('2024-12-10T22:00:00'),
     location: 'Central Park, New York',
     attendees: [
-      { userId: 5, email: '', password: '' },
-      { userId: 6, email: '', password: '' }
-    ] as User[],  // List of attendees
+      '1' , '2'
+    ] as String[],  // List of attendees
     organizerUserId: '5', // Set the organizer's user ID as a string
     schedule: [
       { time: new Date('2024-12-10T16:00:00'), description: 'Ceremony' },
@@ -41,9 +40,8 @@ export class EventsListComponent implements OnInit {
     endDate: new Date('2024-12-15T23:00:00'),
     location: 'Downtown Hotel, Los Angeles',
     attendees: [
-      { userId: 1, email: '', password: '' },
-      { userId: 2, email: '', password: '' }
-    ] as User[],  // List of attendees
+      '1' , '2'
+    ] as String[],  // List of attendees
     organizerUserId: '1', // Set the organizer's user ID as a string
     schedule: [
       { time: new Date('2024-12-15T18:00:00'), description: 'Cocktail Hour' },
