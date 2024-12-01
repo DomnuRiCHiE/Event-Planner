@@ -9,6 +9,9 @@ import { Event } from '../../models/event.model';
 import { Schedule } from '../../models/schedule.model';
 import { FirebaseService } from '../../services/firebase.service'; // Ensure FirebaseService is implemented
 
+
+
+
 @Component({
   selector: 'event-form',
   templateUrl: './event-form.component.html',
@@ -32,6 +35,8 @@ export class EventFormComponent {
     schedule: [],
     organizerUserId: ''
   };
+
+
 
   schedules: Schedule[] = [];
 
