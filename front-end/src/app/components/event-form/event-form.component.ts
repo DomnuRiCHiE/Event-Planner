@@ -7,7 +7,8 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { Event } from '../../models/event.model';
 import { Schedule } from '../../models/schedule.model';
-import { FirebaseService } from '../../services/firebase.service'; // Ensure FirebaseService is implemented
+import { FirebaseService } from '../../services/firebase.service';
+import {Router} from '@angular/router'; // Ensure FirebaseService is implemented
 
 
 
@@ -49,7 +50,12 @@ export class EventFormComponent {
   newAttendeeEmail: string = ''; // Variabila pentru e-mail-ul noului participant
   isSubmitting = false; // Used to show loading state
 
-  constructor(private firebaseService: FirebaseService) {}
+  constructor(private firebaseService: FirebaseService, private router: Router) {}
+
+
+  navigateTo(route: string): void {
+    this.router.navigate([route]);
+  }
 
   addCustomSchedule() {
     const newSchedule: Schedule = { ...this.customSchedule };
