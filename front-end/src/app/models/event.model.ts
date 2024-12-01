@@ -7,7 +7,7 @@ export interface Event {
     startDate: Date;
     endDate: Date;
     location: string;
-    organizers?: User[];
+    organizerUserId : string;
     attendees?: User[];
     schedule?: Schedule[];
 }

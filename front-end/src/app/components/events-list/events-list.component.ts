@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {Event} from '../../models/event.model';
-import {CommonModule, DatePipe} from '@angular/common';
-import {User} from '../../models/user.model';
+import { Event } from '../../models/event.model';  // Import Event model
+import { CommonModule, DatePipe } from '@angular/common';
+import { User } from '../../models/user.model';  // Import User model
 
 @Component({
   selector: 'app-events-list',
@@ -11,9 +11,9 @@ import {User} from '../../models/user.model';
     CommonModule
   ],
   templateUrl: './events-list.component.html',
-  styleUrl: './events-list.component.css'
+  styleUrls: ['./events-list.component.css']
 })
-export class EventsListComponent implements OnInit{
+export class EventsListComponent implements OnInit {
   events: Event[] = [];
 
   event1: Event = {
@@ -23,13 +23,10 @@ export class EventsListComponent implements OnInit{
     endDate: new Date('2024-12-10T22:00:00'),
     location: 'Central Park, New York',
     attendees: [
-      { userId: 5 , email:'', password:''},
-      { userId: 6 , email:'', password:''}
-    ] as User[],
-    organizers: [
-      { userId: 7, email:'', password:'' },
-      { userId: 8 , email:'', password:'' }
-    ] as User[],
+      { userId: 5, email: '', password: '' },
+      { userId: 6, email: '', password: '' }
+    ] as User[],  // List of attendees
+    organizerUserId: '5', // Set the organizer's user ID as a string
     schedule: [
       { time: new Date('2024-12-10T16:00:00'), description: 'Ceremony' },
       { time: new Date('2024-12-10T18:00:00'), description: 'Dinner' },
@@ -37,27 +34,23 @@ export class EventsListComponent implements OnInit{
     ]
   };
 
-  event2 : Event = {
+  event2: Event = {
     eventId: 2,
     name: 'Company Annual Party',
     startDate: new Date('2024-12-15T18:00:00'),
     endDate: new Date('2024-12-15T23:00:00'),
     location: 'Downtown Hotel, Los Angeles',
     attendees: [
-      { userId: 1 , email:'', password:'' },
-      { userId: 2, email:'', password:'' }
-    ] as User[],  // Explicitly type as User[]
-    organizers: [
-      { userId: 3 , email:'', password:''},
-      { userId: 4 , email:'', password:'' }
-    ] as User[],  // Explicitly type as User[]
+      { userId: 1, email: '', password: '' },
+      { userId: 2, email: '', password: '' }
+    ] as User[],  // List of attendees
+    organizerUserId: '1', // Set the organizer's user ID as a string
     schedule: [
       { time: new Date('2024-12-15T18:00:00'), description: 'Cocktail Hour' },
       { time: new Date('2024-12-15T19:30:00'), description: 'Awards Ceremony' },
       { time: new Date('2024-12-15T21:00:00'), description: 'Music and Dancing' }
     ]
   };
-
 
   ngOnInit(): void {
     this.events.push(this.event1);
