@@ -9,9 +9,7 @@ import { Event } from '../../models/event.model';
 import { Schedule } from '../../models/schedule.model';
 import { FirebaseService } from '../../services/firebase.service';
 import {Router} from '@angular/router'; // Ensure FirebaseService is implemented
-
-
-
+import { HttpClient } from '@angular/common/http'; // For making HTTP requests to the backend
 
 @Component({
   selector: 'event-form',
@@ -50,7 +48,7 @@ export class EventFormComponent {
   newAttendeeEmail: string = ''; // Variabila pentru e-mail-ul noului participant
   isSubmitting = false; // Used to show loading state
 
-  constructor(private firebaseService: FirebaseService, private router: Router) {}
+  constructor(private firebaseService: FirebaseService, private router: Router, private http: HttpClient) {}
 
 
   navigateTo(route: string): void {
@@ -107,6 +105,7 @@ export class EventFormComponent {
       this.event.schedule = [...this.schedules];
       await this.firebaseService.saveEvent(this.event);
       console.log('Event saved:', this.event);
+      await this.sendInvitations();
       alert('Event saved successfully!');
       this.resetForm();
     } catch (error) {
@@ -114,6 +113,20 @@ export class EventFormComponent {
       alert('Failed to save event.');
     } finally {
       this.isSubmitting = false;
+    }
+  }
+
+  async sendInvitations() {
+    try {
+      const response = await this.http
+        .post('http://localhost:3000/send-invitations', { eventId: this.event.name })
+        .toPromise();
+
+      console.log('Email sending response:', response);
+      alert('Invitations sent successfully!');
+    } catch (error) {
+      console.error('Error sending invitations:', error);
+      alert('Failed to send invitations.');
     }
   }
 
