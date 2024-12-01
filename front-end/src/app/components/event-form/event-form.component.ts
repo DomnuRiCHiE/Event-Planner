@@ -1,5 +1,3 @@
-// event-form.component.ts
-
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -9,6 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { Event } from '../../models/event.model';
 import { Schedule } from '../../models/schedule.model';
+import { FirebaseService } from '../../services/firebase.service'; // Ensure FirebaseService is implemented
 
 @Component({
   selector: 'event-form',
@@ -24,9 +23,6 @@ import { Schedule } from '../../models/schedule.model';
     CardModule,
   ],
 })
-
-//TO DO orice include backend-ul
-
 export class EventFormComponent {
   event: Event = {
     name: '',
@@ -34,6 +30,7 @@ export class EventFormComponent {
     endDate: new Date(),
     location: '',
     schedule: [],
+    organizerUserId: ''
   };
 
   schedules: Schedule[] = [];
@@ -43,12 +40,14 @@ export class EventFormComponent {
     time: new Date(),
   };
 
+  isSubmitting = false; // Used to show loading state
+
+  constructor(private firebaseService: FirebaseService) {}
+
   addCustomSchedule() {
-    const newSchedule: Schedule = {
-      ...this.customSchedule,
-    };
+    const newSchedule: Schedule = { ...this.customSchedule };
     this.schedules.push(newSchedule);
-    this.customSchedule = { description: '', time: new Date() };  // Resetting for new input
+    this.customSchedule = { description: '', time: new Date() }; // Reset for new input
   }
 
   removeSchedule(index: number) {
@@ -59,11 +58,37 @@ export class EventFormComponent {
     return index;
   }
 
-  onSubmit() {
-    console.log('Form submitted!');
-    this.event.schedule = this.schedules.map(schedule => ({
-      ...schedule,
-    }));
-    console.log('Event:', this.event);
+  async onSubmit() {
+    if (!this.event.name || !this.event.location || !this.schedules.length) {
+      alert('Please fill in all required fields and add at least one schedule.');
+      return;
+    }
+
+    this.isSubmitting = true;
+    try {
+      console.log('Submitting event...');
+      this.event.schedule = [...this.schedules];
+      await this.firebaseService.saveEvent(this.event);
+      console.log('Event saved:', this.event);
+      alert('Event saved successfully!');
+      this.resetForm();
+    } catch (error) {
+      console.error('Error saving event:', error);
+      alert('Failed to save event.');
+    } finally {
+      this.isSubmitting = false;
+    }
+  }
+
+  resetForm() {
+    this.event = {
+      name: '',
+      startDate: new Date(),
+      endDate: new Date(),
+      location: '',
+      schedule: [],
+      organizerUserId: ''
+    };
+    this.schedules = [];
   }
 }
