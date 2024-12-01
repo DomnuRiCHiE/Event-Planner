@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Event } from '../../models/event.model';  // Import Event model
 import { CommonModule, DatePipe } from '@angular/common';
-import { User } from '../../models/user.model';  // Import User model
+import { User } from '../../models/user.model';
+import {Router} from '@angular/router';  // Import User model
 
 @Component({
   selector: 'app-events-list',
@@ -15,6 +16,8 @@ import { User } from '../../models/user.model';  // Import User model
 })
 export class EventsListComponent implements OnInit {
   events: Event[] = [];
+
+  constructor(private router: Router) {}
 
   event1: Event = {
     eventId: 1,
@@ -57,5 +60,8 @@ export class EventsListComponent implements OnInit {
 
   viewEventDetails(eventId: number | undefined): void {
     console.log('Viewing details for event with ID:', eventId);
+  }
+  navigateTo(route: string): void {
+    this.router.navigate([route]);
   }
 }

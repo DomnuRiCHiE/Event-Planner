@@ -25,7 +25,7 @@ export class LoginComponent {
     try {
       await this.firebaseService.loginWithEmail(this.email, this.password);
       console.log('Login successful');
-      this.router.navigate(['/events-list']);
+      this.router.navigate(['/landing-page']);
       // Redirect the user or perform other actions after login
     } catch (error) {
       this.errorMessage = 'Login failed';

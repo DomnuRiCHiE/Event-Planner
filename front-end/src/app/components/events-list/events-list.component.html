@@ -1,3 +1,10 @@
+<nav class="navbar">
+  <button (click)="navigateTo('/login')">Login</button>
+  <button (click)="navigateTo('/events-list')">Event List</button>
+  <button (click)="navigateTo('/event-form')">Event Planner</button>
+  <button (click)="navigateTo('/landing-page')">Landing Page</button>
+</nav>
+
 <div *ngIf="events.length > 0; else noEvents">
   <ul class="no-bullet">
     <li *ngFor="let event of events">
