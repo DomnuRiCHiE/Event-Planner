@@ -9,6 +9,9 @@ import { Event } from '../../models/event.model';
 import { Schedule } from '../../models/schedule.model';
 import { FirebaseService } from '../../services/firebase.service'; // Ensure FirebaseService is implemented
 
+
+
+
 @Component({
   selector: 'event-form',
   templateUrl: './event-form.component.html',
@@ -30,8 +33,11 @@ export class EventFormComponent {
     endDate: new Date(),
     location: '',
     schedule: [],
-    organizerUserId: ''
+    organizerUserId: '',
+    attendees: []
   };
+
+
 
   schedules: Schedule[] = [];
 
@@ -40,6 +46,7 @@ export class EventFormComponent {
     time: new Date(),
   };
 
+  newAttendeeEmail: string = ''; // Variabila pentru e-mail-ul noului participant
   isSubmitting = false; // Used to show loading state
 
   constructor(private firebaseService: FirebaseService) {}
@@ -54,12 +61,36 @@ export class EventFormComponent {
     this.schedules.splice(index, 1);
   }
 
+  addAttendee() {
+    // Asigură-te că attendees nu este undefined
+    if (!this.event.attendees) {
+      this.event.attendees = [];
+    }
+
+    if (this.newAttendeeEmail.trim() && !this.event.attendees.includes(this.newAttendeeEmail)) {
+      this.event.attendees.push(this.newAttendeeEmail.trim());
+      this.newAttendeeEmail = ''; // Reset input
+    } else {
+      alert('Email is either invalid or already added.');
+    }
+  }
+
+  removeAttendee(index: number) {
+    // Asigură-te că attendees nu este undefined
+    if (this.event.attendees) {
+      this.event.attendees.splice(index, 1);
+    } else {
+      alert('No attendees to remove.');
+    }
+  }
+
+
   trackByIndex(index: number): number {
     return index;
   }
 
   async onSubmit() {
-    if (!this.event.name || !this.event.location || !this.schedules.length) {
+    if (!this.event.name || !this.event.location || !this.schedules.length || !this.event.attendees?.length) {
       alert('Please fill in all required fields and add at least one schedule.');
       return;
     }
@@ -87,8 +118,10 @@ export class EventFormComponent {
       endDate: new Date(),
       location: '',
       schedule: [],
-      organizerUserId: ''
+      organizerUserId: '',
+      attendees: []
     };
     this.schedules = [];
+    this.newAttendeeEmail= '';
   }
 }

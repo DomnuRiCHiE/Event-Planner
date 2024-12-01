@@ -8,6 +8,6 @@ export interface Event {
     endDate: Date;
     location: string;
     organizerUserId : string;
-    attendees?: User[];
+    attendees?: String[];
     schedule?: Schedule[];
 }

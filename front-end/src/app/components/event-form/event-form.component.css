@@ -124,3 +124,66 @@ input{
   padding-left: 8px;
   /* Adds space between input text and calendar icon */
 }
+
+
+/* Attendees Card Styling */
+.attendees-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 10px;
+}
+
+.attendee-card {
+  flex: 0 0 48%;
+  margin-bottom: 15px;
+}
+
+.attendee-card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+/* Schedule Card Styling */
+.schedule-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.schedule-card {
+  flex: 0 0 48%;
+  margin-bottom: 15px;
+}
+
+.schedule-card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+/* Button Styling */
+.add-button {
+  margin-top: 10px;
+}
+
+.submit-button {
+  margin-top: 10px;
+}
+
+
+
+
+
+

@@ -54,33 +54,89 @@
       </div>
     </div>
 
+    <!-- Attendees Section -->
+    <div class="form-group">
+      <label>Attendees</label>
+      <div class="attendees-cards">
+        <div *ngFor="let attendee of event.attendees; let i = index" class="attendee-card">
+          <p-card>
+            <ng-template pTemplate="content">
+              <div class="attendee-card-content">
+                <span>{{ attendee }}</span>
+                <button
+                  type="button"
+                  (click)="removeAttendee(i)"
+                  pButton
+                  icon="pi pi-times"
+                  class="remove-button"
+                ></button>
+              </div>
+            </ng-template>
+          </p-card>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-12">
+        <label for="attendeeEmail">Add Attendee (Email)</label>
+        <input
+          type="email"
+          pInputText
+          id="attendeeEmail"
+          [(ngModel)]="newAttendeeEmail"
+          name="attendeeEmail"
+          class="form-control"
+        />
+      </div>
+    </div>
+    <div class="form-actions">
+      <button
+        type="button"
+        (click)="addAttendee()"
+        pButton
+        label="Add Attendee"
+        icon="pi pi-plus"
+        class="add-button"
+      ></button>
+      <button class="submit-button"
+              pButton
+              label="Import from excel"
+              icon="pi pi-check"
+      ></button>
+    </div>
+
+
     <!-- Schedule Section -->
     <div class="form-group">
       <label>Schedule</label>
-      <div *ngFor="let schedule of schedules; let i = index; trackBy: trackByIndex" class="schedule-card">
-        <p-card>
-          <ng-template pTemplate="content">
-            <div>
-              <span>{{ schedule.description }}</span>
-              <p-calendar
-                [(ngModel)]="schedule.time"
-                name="scheduleTime{{ i }}"
-                [showTime]="true"
-                dateFormat="yy-mm-dd"
-                hourFormat="24"
-              ></p-calendar>
-              <button
-                type="button"
-                (click)="removeSchedule(i)"
-                pButton
-                icon="pi pi-times"
-                class="remove-button"
-              ></button>
-            </div>
-          </ng-template>
-        </p-card>
+      <div class="schedule-cards">
+        <div *ngFor="let schedule of schedules; let i = index; trackBy: trackByIndex" class="schedule-card">
+          <p-card>
+            <ng-template pTemplate="content">
+              <div class="schedule-card-content">
+                <span>{{ schedule.description }}</span>
+                <p-calendar
+                  [(ngModel)]="schedule.time"
+                  name="scheduleTime{{ i }}"
+                  [showTime]="true"
+                  dateFormat="yy-mm-dd"
+                  hourFormat="24"
+                ></p-calendar>
+                <button
+                  type="button"
+                  (click)="removeSchedule(i)"
+                  pButton
+                  icon="pi pi-times"
+                  class="remove-button"
+                ></button>
+              </div>
+            </ng-template>
+          </p-card>
+        </div>
       </div>
     </div>
+
 
     <!-- Add Schedule -->
     <div class="form-row">
@@ -108,6 +164,7 @@
       </div>
     </div>
 
+
     <!-- Add and Submit Buttons -->
     <div class="form-actions">
       <button class="add-button"
@@ -120,7 +177,7 @@
       <button class="submit-button"
         type="submit"
         pButton
-        label="Submit"
+        label="Submit and send invitations"
         icon="pi pi-check"
         [disabled]="isSubmitting"
       ></button>
