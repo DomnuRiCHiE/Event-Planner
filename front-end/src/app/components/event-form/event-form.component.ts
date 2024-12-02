@@ -134,7 +134,7 @@ export class EventFormComponent {
 
   triggerExcelUpload() {
     const fileInput = document.getElementById('excelFileInput') as HTMLInputElement;
-    fileInput.click(); // Simulates a click on the hidden file input
+    fileInput.click();
   }
 
   onExcelFileUpload(event: Event) {
