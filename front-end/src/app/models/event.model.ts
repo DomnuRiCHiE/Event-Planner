@@ -1,7 +1,7 @@
 import { Schedule } from "./schedule.model";
 import { User } from "./user.model";
 
-export interface Event {
+export interface AppEvent {
     eventId?: number;
     name: string;
     startDate: Date;

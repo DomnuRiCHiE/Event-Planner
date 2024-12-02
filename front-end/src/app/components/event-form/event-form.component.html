@@ -106,10 +106,20 @@
         icon="pi pi-plus"
         class="add-button"
       ></button>
-      <button class="submit-button"
-              pButton
-              label="Import from excel"
-              icon="pi pi-check"
+      <input
+        type="file"
+        accept=".xlsx, .xls"
+        id="excelFileInput"
+        (change)="onExcelFileUpload($event)"
+        style="display: none;"
+      />
+      <button
+        type="button"
+        (click)="triggerExcelUpload()"
+        pButton
+        label="Import from Excel"
+        icon="pi pi-upload"
+        class="submit-button"
       ></button>
     </div>
 

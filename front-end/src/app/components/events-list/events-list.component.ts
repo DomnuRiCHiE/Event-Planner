@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Event } from '../../models/event.model';  // Import Event model
+import { AppEvent } from '../../models/event.model';  // Import Event model
 import { CommonModule, DatePipe } from '@angular/common';
 import { User } from '../../models/user.model';
 import { Router } from '@angular/router';
@@ -16,7 +16,7 @@ import { FirebaseService } from '../../services/firebase.service';  // Import Us
   styleUrls: ['./events-list.component.css']
 })
 export class EventsListComponent implements OnInit {
-  events: Event[] = [];
+  events: AppEvent[] = [];
 
   constructor(private router: Router, private firebaseService: FirebaseService) { }
 

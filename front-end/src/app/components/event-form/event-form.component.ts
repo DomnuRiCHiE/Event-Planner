@@ -5,10 +5,11 @@ import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
-import { Event } from '../../models/event.model';
+import { AppEvent } from '../../models/event.model';
 import { Schedule } from '../../models/schedule.model';
 import { FirebaseService } from '../../services/firebase.service';
 import {Router} from '@angular/router'; // Ensure FirebaseService is implemented
+import * as XLSX from 'xlsx'; // Library to read Excel files
 
 
 
@@ -28,7 +29,7 @@ import {Router} from '@angular/router'; // Ensure FirebaseService is implemented
   ],
 })
 export class EventFormComponent {
-  event: Event = {
+  event: AppEvent = {
     name: '',
     startDate: new Date(),
     endDate: new Date(),
@@ -130,4 +131,64 @@ export class EventFormComponent {
     this.schedules = [];
     this.newAttendeeEmail= '';
   }
+
+  triggerExcelUpload() {
+    const fileInput = document.getElementById('excelFileInput') as HTMLInputElement;
+    fileInput.click(); // Simulates a click on the hidden file input
+  }
+
+  onExcelFileUpload(event: Event) {
+    const target = event.target as HTMLInputElement;
+    const file = target.files?.[0];
+
+    if (file) {
+      const reader = new FileReader();
+
+      reader.onload = (e: any) => {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+
+        // Assuming the first sheet contains the data
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+
+        // Convert sheet to JSON
+        const jsonData: any[] = XLSX.utils.sheet_to_json(sheet, { header: 1 }); // header: 1 tells XLSX to treat the first row as the header
+
+        // Find the column index that contains 'email' (case-insensitive)
+        const emailColumnIndex = jsonData[0].findIndex((header: string) => header.toLowerCase().includes('email'));
+
+        if (emailColumnIndex === -1) {
+          alert('No email column found in the Excel file.');
+          return;
+        }
+
+        // Extract emails and filter out any invalid or undefined ones
+        const emails = jsonData.slice(1)
+          .map((row: any) => row[emailColumnIndex]) // Extract email address column
+          .filter((email: string) => email); // Remove null/undefined values
+
+        // Ensure attendees is always an array
+        if (!this.event.attendees) {
+          this.event.attendees = [];
+        }
+
+        // Add the emails to attendees
+        this.event.attendees = [...this.event.attendees, ...emails];
+
+
+        // Now mark the form as filled and allow submission
+        alert('Emails imported successfully!');
+      };
+
+      reader.onerror = (error) => {
+        console.error('Error reading file:', error);
+        alert('Failed to read the file. Please try again.');
+      };
+
+      reader.readAsArrayBuffer(file);
+    }
+  }
+
+
 }

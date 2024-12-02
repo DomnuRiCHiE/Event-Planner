@@ -14,7 +14,7 @@ import {
     query,
     getDocs,
 } from "firebase/firestore";
-import { Event } from "../models/event.model";
+import { AppEvent } from "../models/event.model";
 
 @Injectable({
     providedIn: "root",
@@ -72,7 +72,7 @@ export class FirebaseService {
         }
     }
 
-    async saveEvent(event: Event): Promise<void> {
+    async saveEvent(event: AppEvent): Promise<void> {
         try {
             // Wait for the authentication state to be determined
             await this.authStatePromise;
@@ -98,7 +98,7 @@ export class FirebaseService {
         }
     }
 
-    async getLoggedInUsersEvents(): Promise<Event[]> {
+    async getLoggedInUsersEvents(): Promise<AppEvent[]> {
         try {
             // Wait for the authentication state to be determined
             await this.authStatePromise;
@@ -114,10 +114,10 @@ export class FirebaseService {
                         where("organizerUserId", "==", currentUser.uid)
                     )
                 );
-                const events: Event[] = [];
+                const events: AppEvent[] = [];
 
                 querySnapshot.forEach((doc: any) => {
-                    events.push(doc.data() as Event);
+                    events.push(doc.data() as AppEvent);
                 });
 
                 return events;
@@ -130,7 +130,7 @@ export class FirebaseService {
         }
     }
 
-    async getLoggedInUsersEventsAndAttendeeEvents(): Promise<Event[]> {
+    async getLoggedInUsersEventsAndAttendeeEvents(): Promise<AppEvent[]> {
         try {
             // Wait for the authentication state to be determined
             await this.authStatePromise;
@@ -148,10 +148,10 @@ export class FirebaseService {
                         where("organizerUserId", "==", currentUser.uid)
                     )
                 );
-                const events: Event[] = [];
+                const events: AppEvent[] = [];
 
                 organizerQuerySnapshot.forEach((doc: any) => {
-                    events.push(doc.data() as Event);
+                    events.push(doc.data() as AppEvent);
                 });
 
                 // Query for events where the user is an attendee
@@ -164,7 +164,7 @@ export class FirebaseService {
 
                 attendeeQuerySnapshot.forEach((doc: any) => {
                     console.log("Attendee event:", doc.data());
-                    events.push(doc.data() as Event);
+                    events.push(doc.data() as AppEvent);
                 });
 
                 return events;
