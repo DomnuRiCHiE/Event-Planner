@@ -3,6 +3,7 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword, Auth } from 'firebase/auth';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import { Event } from '../models/event.model';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +11,10 @@ import { Event } from '../models/event.model';
 export class FirebaseService {
   private auth: Auth;
   private db;
+  private apiUrl = 'http://localhost:8080/api/emails/send'; // Replace with your Spring Boot server URL
 
-  constructor() {
+
+  constructor(private http: HttpClient) {
     const firebaseConfig = {
       apiKey: "AIzaSyC5ftHFsiiB5VC71rre52EDHMVpvi_5aAY",
       authDomain: "mybigday-53567.firebaseapp.com",
@@ -26,6 +29,16 @@ export class FirebaseService {
     const app = initializeApp(firebaseConfig);
     this.auth = getAuth(app);
     this.db = getFirestore(app);
+  }
+
+  sendEmail(to: string, subject: string, text: string) {
+    return this.http.post(this.apiUrl, null, {
+      params: {
+        to,
+        subject,
+        text,
+      },
+    });
   }
 
   async loginWithEmail(email: string, password: string): Promise<void> {

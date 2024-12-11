@@ -9,7 +9,6 @@ import { Event } from '../../models/event.model';
 import { Schedule } from '../../models/schedule.model';
 import { FirebaseService } from '../../services/firebase.service';
 import {Router} from '@angular/router'; // Ensure FirebaseService is implemented
-import { HttpClient } from '@angular/common/http'; // For making HTTP requests to the backend
 
 @Component({
   selector: 'event-form',
@@ -36,8 +35,6 @@ export class EventFormComponent {
     attendees: []
   };
 
-
-
   schedules: Schedule[] = [];
 
   customSchedule: Schedule = {
@@ -48,8 +45,7 @@ export class EventFormComponent {
   newAttendeeEmail: string = ''; // Variabila pentru e-mail-ul noului participant
   isSubmitting = false; // Used to show loading state
 
-  constructor(private firebaseService: FirebaseService, private router: Router, private http: HttpClient) {}
-
+  constructor(private firebaseService: FirebaseService, private router: Router) {}
 
   navigateTo(route: string): void {
     this.router.navigate([route]);
@@ -105,28 +101,22 @@ export class EventFormComponent {
       this.event.schedule = [...this.schedules];
       await this.firebaseService.saveEvent(this.event);
       console.log('Event saved:', this.event);
-      await this.sendInvitations();
-      alert('Event saved successfully!');
+
+      // Send emails to attendees
+      const subject = `Invitation to ${this.event.name}`;
+      const text = `You are invited to ${this.event.name} at ${this.event.location} from ${this.event.startDate} to ${this.event.endDate}.`;
+
+      for (const attendee of this.event.attendees) {
+        await this.firebaseService.sendEmail(attendee, subject, text).toPromise();
+      }
+
+      alert('Event saved and invitations sent successfully!');
       this.resetForm();
     } catch (error) {
       console.error('Error saving event:', error);
       alert('Failed to save event.');
     } finally {
       this.isSubmitting = false;
-    }
-  }
-
-  async sendInvitations() {
-    try {
-      const response = await this.http
-        .post('http://localhost:3000/send-invitations', { eventId: this.event.name })
-        .toPromise();
-
-      console.log('Email sending response:', response);
-      alert('Invitations sent successfully!');
-    } catch (error) {
-      console.error('Error sending invitations:', error);
-      alert('Failed to send invitations.');
     }
   }
 
