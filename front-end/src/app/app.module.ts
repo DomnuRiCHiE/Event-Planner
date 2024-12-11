@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
-import {HttpClientModule} from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 
 // ...existing code...
 
@@ -12,10 +12,9 @@ import {HttpClientModule} from '@angular/common/http';
   ],
   imports: [
     FormsModule,
-    HttpClientModule,
     // ...existing code...
   ],
-  providers: [],
+  providers: [provideHttpClient()],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

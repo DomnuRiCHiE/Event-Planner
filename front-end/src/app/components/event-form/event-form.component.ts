@@ -107,7 +107,7 @@ export class EventFormComponent {
       const text = `You are invited to ${this.event.name} at ${this.event.location} from ${this.event.startDate} to ${this.event.endDate}.`;
 
       for (const attendee of this.event.attendees) {
-        await this.firebaseService.sendEmail(attendee, subject, text).toPromise();
+        await this.firebaseService.sendEmail(attendee.toString(), subject, text).toPromise();
       }
 
       alert('Event saved and invitations sent successfully!');
