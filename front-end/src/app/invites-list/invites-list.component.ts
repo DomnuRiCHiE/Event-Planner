@@ -18,7 +18,8 @@ import {Timestamp} from '@angular/fire/firestore';
 export class InvitesListComponent implements OnInit {
   events: AppEvent[] = [];
 
-  constructor(private router: Router, private firebaseService: FirebaseService) { }
+  constructor(private router: Router, private firebaseService: FirebaseService) {
+  }
 
   async ngOnInit(): Promise<void> {
     try {
@@ -37,10 +38,25 @@ export class InvitesListComponent implements OnInit {
     }
   }
 
-  viewEventDetails(eventId: number | undefined): void {
+  viewEventDetails(eventId: String | undefined): void {
     console.log('Viewing details for event with ID:', eventId);
   }
 
+  async acceptEvent(event: AppEvent): Promise<void> {
+    try {
+      await this.firebaseService.modifyEventAttendance(event.eventId!, 'Accepted');
+      console.log(`Declined event with ID: ${event.eventId}`);
+    } catch (error) {
+      console.error('Error accepting event:', error); }
+  }
+
+  async declineEvent(event: AppEvent): Promise<void> {
+    try {
+      await this.firebaseService.modifyEventAttendance(event.eventId!, 'Declined');
+      console.log(`Declined event with ID: ${event.eventId}`);
+    } catch (error) {
+      console.error('Error declining event:', error); }
+  }
   navigateTo(route: string): void {
     this.router.navigate([route]);
   }

@@ -1,4 +1,4 @@
 export interface Attendee {
     email: string;
-    confirmedStatus: number;
+    confirmedStatus: string;
 }

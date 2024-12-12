@@ -33,7 +33,7 @@ export class EventFormComponent {
     endDate: new Date(),
     location: '',
     schedule: [],
-    organizerUserId: '',
+    organizerUserEmail: '',
     attendees: [],
   };
 
@@ -69,7 +69,7 @@ export class EventFormComponent {
     }
     const newAttendee: Attendee = {
       email: this.newAttendeeEmail.trim(),
-      confirmedStatus: 0,
+      confirmedStatus: 'unconfirmed',
     };
 
     if (
@@ -124,7 +124,7 @@ export class EventFormComponent {
       endDate: new Date(),
       location: '',
       schedule: [],
-      organizerUserId: '',
+      organizerUserEmail: '',
       attendees: [],
     };
     this.schedules = [];
@@ -172,7 +172,7 @@ export class EventFormComponent {
 
         const newAttendees: Attendee[] = emails.map(email => ({
           email: email.trim(),
-          confirmedStatus: 0,
+          confirmedStatus: 'unconfirmed',
         }));
 
         const uniqueAttendees = newAttendees.filter(newAttendee =>

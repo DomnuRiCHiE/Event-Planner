@@ -13,17 +13,12 @@
         <!-- Event Name -->
         <h3>{{ event.name }}</h3>
 
-        <!-- Event Location and Date -->
+        <!-- Event Location and Date and Organizer -->
         <p>{{ event.location }}</p>
         <p>{{ event.startDate | date: 'short' }} - {{ event.endDate | date: 'short' }}</p>
-
-        <!-- Attendees List -->
-        <div class="attendees">
-          <strong>Attendees:</strong>
-          <ul>
-            <li *ngFor="let attendee of event.attendees">{{ attendee}}</li>
-          </ul>
-        </div>
+        <br>
+        <strong>Invited by organizer:</strong>
+        <p> {{event.organizerUserEmail}}</p>
 
         <!-- Event Schedule -->
         <div class="schedule">
@@ -37,6 +32,8 @@
 
         <!-- Button to view event details -->
         <button (click)="viewEventDetails(event.eventId)">View Details</button>
+        <button class="accept" (click)="acceptEvent(event)">Accept</button>
+        <button class="decline" (click)="declineEvent(event)">Decline</button>
       </div>
     </li>
   </ul>

@@ -168,3 +168,13 @@ button:hover {
     max-width: 300px;
   }
 }
+
+.accept{
+  background-color:green;
+  margin: 10px;
+}
+
+.decline{
+  background-color:red;
+  margin: 10px;
+}

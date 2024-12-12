@@ -38,7 +38,7 @@ export class EventsListComponent implements OnInit {
   }
 
 
-  viewEventDetails(eventId: number | undefined): void {
+  viewEventDetails(eventId: string | undefined): void {
     console.log('Viewing details for event with ID:', eventId);
   }
 

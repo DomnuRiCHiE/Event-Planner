@@ -15,6 +15,7 @@ import {
     getDocs,
 } from "firebase/firestore";
 import { AppEvent } from "../models/event.model";
+import {doc, getDoc, updateDoc} from '@angular/fire/firestore';
 
 @Injectable({
     providedIn: "root",
@@ -81,7 +82,7 @@ export class FirebaseService {
             const currentUser = this.currentUser;
 
             if (currentUser) {
-                event.organizerUserId = currentUser.uid; // Set the current user's ID in the event
+                event.organizerUserEmail = currentUser.email; // Set the current user's email in the event
 
                 // Reference to the Firestore collection where events are stored
                 const eventsCollection = collection(this.db, "Events");
@@ -111,13 +112,16 @@ export class FirebaseService {
                 const querySnapshot = await getDocs(
                     query(
                         eventsCollection,
-                        where("organizerUserId", "==", currentUser.uid)
+                        where("organizerUserEmail", "==", currentUser.email)
                     )
                 );
                 const events: AppEvent[] = [];
 
                 querySnapshot.forEach((doc: any) => {
-                    events.push(doc.data() as AppEvent);
+                  const eventData = doc.data() as AppEvent;
+                  // Get the id
+                  eventData.eventId = doc.id;
+                  events.push(doc.data() as AppEvent);
                 });
 
                 return events;
@@ -149,6 +153,8 @@ export class FirebaseService {
         const attendeeEvents: AppEvent[] = [];
         querySnapshot.forEach((doc: any) => {
           const event = doc.data() as AppEvent;
+          // Get the id
+          event.eventId = doc.id;
           if (event.attendees && event.attendees.some(attendee => attendee.email === currentUser.email)) {
             console.log("Attendee event:", event);
             attendeeEvents.push(event);
@@ -166,5 +172,42 @@ export class FirebaseService {
     }
   }
 
+  async modifyEventAttendance(eventId: string, status: string): Promise<void> {
+    try {
+      await this.authStatePromise;
+
+      const currentUser = this.currentUser;
+      if (!currentUser) {
+        throw new Error("No user is logged in");
+      }
+
+      const eventDoc = doc(this.db, "Events", eventId);
+      const eventSnapshot = await getDoc(eventDoc);
+
+      if (eventSnapshot.exists()) {
+        const eventData = eventSnapshot.data() as AppEvent;
+
+        if (eventData.attendees) {
+          eventData.attendees = eventData.attendees.map(attendee => {
+            if (attendee.email === currentUser.email) {
+              return { ...attendee, confirmedStatus: status };  // Change to 'accepted'
+            }
+            return attendee;
+          });
+
+          const updateData: Partial<AppEvent> = { attendees: eventData.attendees };
+          await updateDoc(eventDoc, updateData);
+          console.log("Event attendance confirmed!");
+        } else {
+          console.error("No attendees found for this event.");
+        }
+      } else {
+        console.error("Event not found");
+      }
+    } catch (error) {
+      console.error("Error confirming event attendance:", error);
+      throw error;
+    }
+  }
 
 }
