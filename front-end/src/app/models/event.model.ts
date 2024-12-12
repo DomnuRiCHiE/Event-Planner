@@ -1,5 +1,5 @@
 import { Schedule } from "./schedule.model";
-import { User } from "./user.model";
+import {Attendee} from './attendee.model';
 
 export interface AppEvent {
     eventId?: number;
@@ -8,6 +8,6 @@ export interface AppEvent {
     endDate: Date;
     location: string;
     organizerUserId : string;
-    attendees?: String[];
+    attendees?: Attendee[];
     schedule?: Schedule[];
 }

@@ -7,12 +7,10 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { AppEvent } from '../../models/event.model';
 import { Schedule } from '../../models/schedule.model';
+import { Attendee } from '../../models/attendee.model';
 import { FirebaseService } from '../../services/firebase.service';
-import {Router} from '@angular/router'; // Ensure FirebaseService is implemented
-import * as XLSX from 'xlsx'; // Library to read Excel files
-
-
-
+import { Router } from '@angular/router';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'event-form',
@@ -36,10 +34,8 @@ export class EventFormComponent {
     location: '',
     schedule: [],
     organizerUserId: '',
-    attendees: []
+    attendees: [],
   };
-
-
 
   schedules: Schedule[] = [];
 
@@ -48,11 +44,10 @@ export class EventFormComponent {
     time: new Date(),
   };
 
-  newAttendeeEmail: string = ''; // Variabila pentru e-mail-ul noului participant
-  isSubmitting = false; // Used to show loading state
+  newAttendeeEmail: string = '';
+  isSubmitting = false;
 
   constructor(private firebaseService: FirebaseService, private router: Router) {}
-
 
   navigateTo(route: string): void {
     this.router.navigate([route]);
@@ -61,7 +56,7 @@ export class EventFormComponent {
   addCustomSchedule() {
     const newSchedule: Schedule = { ...this.customSchedule };
     this.schedules.push(newSchedule);
-    this.customSchedule = { description: '', time: new Date() }; // Reset for new input
+    this.customSchedule = { description: '', time: new Date() };
   }
 
   removeSchedule(index: number) {
@@ -69,28 +64,32 @@ export class EventFormComponent {
   }
 
   addAttendee() {
-    // Asigură-te că attendees nu este undefined
     if (!this.event.attendees) {
       this.event.attendees = [];
     }
+    const newAttendee: Attendee = {
+      email: this.newAttendeeEmail.trim(),
+      confirmedStatus: 0,
+    };
 
-    if (this.newAttendeeEmail.trim() && !this.event.attendees.includes(this.newAttendeeEmail)) {
-      this.event.attendees.push(this.newAttendeeEmail.trim());
-      this.newAttendeeEmail = ''; // Reset input
+    if (
+      this.newAttendeeEmail.trim() &&
+      !this.event.attendees.some((attendee) => attendee.email === newAttendee.email)
+    ) {
+      this.event.attendees.push(newAttendee);
+      this.newAttendeeEmail = '';
     } else {
       alert('Email is either invalid or already added.');
     }
   }
 
   removeAttendee(index: number) {
-    // Asigură-te că attendees nu este undefined
     if (this.event.attendees) {
       this.event.attendees.splice(index, 1);
     } else {
       alert('No attendees to remove.');
     }
   }
-
 
   trackByIndex(index: number): number {
     return index;
@@ -126,10 +125,10 @@ export class EventFormComponent {
       location: '',
       schedule: [],
       organizerUserId: '',
-      attendees: []
+      attendees: [],
     };
     this.schedules = [];
-    this.newAttendeeEmail= '';
+    this.newAttendeeEmail = '';
   }
 
   triggerExcelUpload() {
@@ -148,36 +147,40 @@ export class EventFormComponent {
         const data = new Uint8Array(e.target.result);
         const workbook = XLSX.read(data, { type: 'array' });
 
-        // Assuming the first sheet contains the data
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
 
-        // Convert sheet to JSON
-        const jsonData: any[] = XLSX.utils.sheet_to_json(sheet, { header: 1 }); // header: 1 tells XLSX to treat the first row as the header
+        const jsonData: any[] = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-        // Find the column index that contains 'email' (case-insensitive)
-        const emailColumnIndex = jsonData[0].findIndex((header: string) => header.toLowerCase().includes('email'));
+        const emailColumnIndex = jsonData[0].findIndex((header: string) =>
+          header.toLowerCase().includes('email')
+        );
 
         if (emailColumnIndex === -1) {
           alert('No email column found in the Excel file.');
           return;
         }
 
-        // Extract emails and filter out any invalid or undefined ones
-        const emails = jsonData.slice(1)
-          .map((row: any) => row[emailColumnIndex]) // Extract email address column
-          .filter((email: string) => email); // Remove null/undefined values
+        const emails = jsonData
+          .slice(1)
+          .map((row: any) => row[emailColumnIndex])
+          .filter((email: string) => email);
 
-        // Ensure attendees is always an array
         if (!this.event.attendees) {
           this.event.attendees = [];
         }
 
-        // Add the emails to attendees
-        this.event.attendees = [...this.event.attendees, ...emails];
+        const newAttendees: Attendee[] = emails.map(email => ({
+          email: email.trim(),
+          confirmedStatus: 0,
+        }));
 
+        const uniqueAttendees = newAttendees.filter(newAttendee =>
+          !this.event.attendees!.some(attendee => attendee.email === newAttendee.email)
+        );
 
-        // Now mark the form as filled and allow submission
+        this.event.attendees = [...this.event.attendees, ...uniqueAttendees];
+
         alert('Emails imported successfully!');
       };
 
@@ -189,6 +192,5 @@ export class EventFormComponent {
       reader.readAsArrayBuffer(file);
     }
   }
-
 
 }
