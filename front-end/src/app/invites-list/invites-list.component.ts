@@ -21,7 +21,7 @@ export class InvitesListComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     try {
-      this.events = await this.firebaseService.getLoggedInUsersEventsAndAttendeeEvents();
+      this.events = await this.firebaseService.getLoggedInUsersAttendeeEvents();
     } catch (error) {
       console.error('Error getting events:', error);
     }

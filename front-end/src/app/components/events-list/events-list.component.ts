@@ -21,7 +21,7 @@ export class EventsListComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     try {
-      this.events = await this.firebaseService.getLoggedInUsersEventsAndAttendeeEvents();
+      this.events = await this.firebaseService.getLoggedInUsersEvents();
     } catch (error) {
       console.error('Error getting events:', error);
     }

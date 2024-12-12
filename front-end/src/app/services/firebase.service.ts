@@ -130,50 +130,39 @@ export class FirebaseService {
         }
     }
 
-    async getLoggedInUsersEventsAndAttendeeEvents(): Promise<AppEvent[]> {
-        try {
-            // Wait for the authentication state to be determined
-            await this.authStatePromise;
 
-            const currentUser = this.currentUser;
-            console.log("Current user:", currentUser);
 
-            if (currentUser) {
-                const eventsCollection = collection(this.db, "Events");
+  async getLoggedInUsersAttendeeEvents(): Promise<AppEvent[]> {
+    try {
+      await this.authStatePromise;
 
-                // Query for events where the user is the organizer
-                const organizerQuerySnapshot = await getDocs(
-                    query(
-                        eventsCollection,
-                        where("organizerUserId", "==", currentUser.uid)
-                    )
-                );
-                const events: AppEvent[] = [];
+      const currentUser = this.currentUser;
+      console.log("Current user:", currentUser);
 
-                organizerQuerySnapshot.forEach((doc: any) => {
-                    events.push(doc.data() as AppEvent);
-                });
+      if (currentUser) {
+        const eventsCollection = collection(this.db, "Events");
 
-                // Query for events where the user is an attendee
-                const attendeeQuerySnapshot = await getDocs(
-                    query(
-                        eventsCollection,
-                        where("attendees", "array-contains", currentUser.email)
-                    )
-                );
+        // Get all events
+        const querySnapshot = await getDocs(eventsCollection);
 
-                attendeeQuerySnapshot.forEach((doc: any) => {
-                    console.log("Attendee event:", doc.data());
-                    events.push(doc.data() as AppEvent);
-                });
+        const attendeeEvents: AppEvent[] = [];
+        querySnapshot.forEach((doc: any) => {
+          const event = doc.data() as AppEvent;
+          if (event.attendees && event.attendees.some(attendee => attendee.email === currentUser.email)) {
+            console.log("Attendee event:", event);
+            attendeeEvents.push(event);
+          }
+        });
 
-                return events;
-            } else {
-                throw new Error("No user is logged in");
-            }
-        } catch (error) {
-            console.error("Error getting events:", error);
-            throw error; // Pass the error up to the caller
-        }
+        return attendeeEvents;
+      } else {
+        throw new Error("No user is logged in");
+      }
+    } catch (error) {
+      console.error("Error getting attendee events:", error);
+      throw error;
     }
+  }
+
+
 }
