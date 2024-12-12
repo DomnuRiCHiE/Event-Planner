@@ -13,6 +13,7 @@ import * as XLSX from 'xlsx'; // Library to read Excel files
 
 
 
+declare const google: any; // Adaugă această linie după importuri
 
 
 
@@ -58,24 +59,27 @@ export class EventFormComponent implements AfterViewInit{
 
 
   ngAfterViewInit() {
-    // Inițializează Google Places Autocomplete
     const autocomplete = new google.maps.places.Autocomplete(this.locationInput.nativeElement, {
-      types: ['geocode'], // Sugerează doar locații
+      types: ['geocode'], // Sugerează locații
     });
 
     // Ascultă selecția locației
     autocomplete.addListener('place_changed', () => {
       this.ngZone.run(() => {
         const place = autocomplete.getPlace();
+        console.log('Obiectul place:', place); // Loghează obiectul complet
+
         if (place.geometry) {
           this.event.location = place.formatted_address || '';
-          console.log('Locație selectată:', this.event.location);
+          console.log('Selected location:', this.event.location);
         } else {
-          alert('Te rog selectează o locație validă!');
+          alert('Please select a valid location!');
         }
       });
     });
+
   }
+
 
 
   navigateTo(route: string): void {
