@@ -134,6 +134,7 @@ export class FirebaseService {
 
   async getLoggedInUsersAttendeeEvents(): Promise<AppEvent[]> {
     try {
+      // Wait for the authentication state to be determined
       await this.authStatePromise;
 
       const currentUser = this.currentUser;
@@ -155,6 +156,7 @@ export class FirebaseService {
         });
 
         return attendeeEvents;
+
       } else {
         throw new Error("No user is logged in");
       }

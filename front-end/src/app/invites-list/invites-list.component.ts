@@ -3,6 +3,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import {AppEvent} from '../models/event.model';
 import {FirebaseService} from '../services/firebase.service';
+import {Timestamp} from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-events-list',
@@ -21,7 +22,16 @@ export class InvitesListComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     try {
-      this.events = await this.firebaseService.getLoggedInUsersAttendeeEvents();
+      const eventsData = await this.firebaseService.getLoggedInUsersAttendeeEvents();
+      this.events = eventsData.map(event => ({
+        ...event,
+        startDate: (event.startDate as unknown as Timestamp).toDate(),
+        endDate: (event.endDate as unknown as Timestamp).toDate(),
+        schedule: event.schedule ? event.schedule.map(item => ({
+          ...item,
+          time: (item.time as unknown as Timestamp).toDate()
+        })) : []  // Add a default empty array if schedule is undefined
+      }));
     } catch (error) {
       console.error('Error getting events:', error);
     }

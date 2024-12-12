@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@angular/fire": "^18.0.1",
     "firebase": "^11.0.2",
     "xlsx": "^0.18.5"
   }

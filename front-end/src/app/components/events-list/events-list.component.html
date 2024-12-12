@@ -15,7 +15,8 @@
 
         <!-- Event Location and Date -->
         <p>{{ event.location }}</p>
-        <p>{{ event.startDate | date: 'short' }} - {{ event.endDate | date: 'short' }}</p>
+        <p>{{ event.startDate | date: 'medium' }} - {{ event.endDate | date: 'medium' }}</p>
+
 
         <!-- Attendees List -->
         <div class="attendees">
