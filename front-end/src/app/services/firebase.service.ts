@@ -13,8 +13,13 @@ import {
     where,
     query,
     getDocs,
+    doc,
+    getDoc,
+    updateDoc,
+  DocumentReference
 } from "firebase/firestore";
 import { AppEvent } from "../models/event.model";
+import {DocumentData} from '@angular/fire/compat/firestore';
 
 @Injectable({
     providedIn: "root",
@@ -72,6 +77,10 @@ export class FirebaseService {
         }
     }
 
+  getCurrentUserEmail(): string | null {
+    return this.currentUser.email;
+  }
+
     async saveEvent(event: AppEvent): Promise<void> {
         try {
             // Wait for the authentication state to be determined
@@ -81,7 +90,7 @@ export class FirebaseService {
             const currentUser = this.currentUser;
 
             if (currentUser) {
-                event.organizerUserId = currentUser.uid; // Set the current user's ID in the event
+                event.organizerUserEmail = currentUser.email; // Set the current user's email in the event
 
                 // Reference to the Firestore collection where events are stored
                 const eventsCollection = collection(this.db, "Events");
@@ -111,13 +120,16 @@ export class FirebaseService {
                 const querySnapshot = await getDocs(
                     query(
                         eventsCollection,
-                        where("organizerUserId", "==", currentUser.uid)
+                        where("organizerUserEmail", "==", currentUser.email)
                     )
                 );
                 const events: AppEvent[] = [];
 
                 querySnapshot.forEach((doc: any) => {
-                    events.push(doc.data() as AppEvent);
+                  const eventData = doc.data() as AppEvent;
+                  // Get the id
+                  eventData.eventId = doc.id;
+                  events.push(doc.data() as AppEvent);
                 });
 
                 return events;
@@ -130,50 +142,90 @@ export class FirebaseService {
         }
     }
 
-    async getLoggedInUsersEventsAndAttendeeEvents(): Promise<AppEvent[]> {
-        try {
-            // Wait for the authentication state to be determined
-            await this.authStatePromise;
 
-            const currentUser = this.currentUser;
-            console.log("Current user:", currentUser);
 
-            if (currentUser) {
-                const eventsCollection = collection(this.db, "Events");
+  async getLoggedInUsersAttendeeEvents(): Promise<AppEvent[]> {
+    try {
+      // Wait for the authentication state to be determined
+      await this.authStatePromise;
 
-                // Query for events where the user is the organizer
-                const organizerQuerySnapshot = await getDocs(
-                    query(
-                        eventsCollection,
-                        where("organizerUserId", "==", currentUser.uid)
-                    )
-                );
-                const events: AppEvent[] = [];
+      const currentUser = this.currentUser;
+      console.log("Current user:", currentUser);
 
-                organizerQuerySnapshot.forEach((doc: any) => {
-                    events.push(doc.data() as AppEvent);
-                });
+      if (currentUser) {
+        const eventsCollection = collection(this.db, "Events");
 
-                // Query for events where the user is an attendee
-                const attendeeQuerySnapshot = await getDocs(
-                    query(
-                        eventsCollection,
-                        where("attendees", "array-contains", currentUser.email)
-                    )
-                );
+        // Get all events
+        const querySnapshot = await getDocs(eventsCollection);
 
-                attendeeQuerySnapshot.forEach((doc: any) => {
-                    console.log("Attendee event:", doc.data());
-                    events.push(doc.data() as AppEvent);
-                });
+        const attendeeEvents: AppEvent[] = [];
+        querySnapshot.forEach((doc: any) => {
+          const event = doc.data() as AppEvent;
+          // Get the id
+          event.eventId = doc.id;
+          if (event.attendees && event.attendees.some(attendee => attendee.email === currentUser.email)) {
+            console.log("Attendee event:", event);
+            attendeeEvents.push(event);
+          }
+        });
 
-                return events;
-            } else {
-                throw new Error("No user is logged in");
-            }
-        } catch (error) {
-            console.error("Error getting events:", error);
-            throw error; // Pass the error up to the caller
-        }
+        return attendeeEvents;
+
+      } else {
+        throw new Error("No user is logged in");
+      }
+    } catch (error) {
+      console.error("Error getting attendee events:", error);
+      throw error;
     }
+  }
+
+  async modifyEventAttendance(eventId: string, status: string): Promise<void> {
+    try {
+      await this.authStatePromise; // Ensure auth state is ready
+
+      const currentUser = this.currentUser;
+
+      if (!currentUser) {
+        throw new Error('No user is logged in');
+      }
+
+      // Define the document reference with the correct type
+      const eventDoc: DocumentReference<DocumentData, DocumentData> = doc(this.db, 'Events', eventId);
+
+      // Get the document snapshot
+      const eventSnapshot = await getDoc(eventDoc);
+
+
+      if (eventSnapshot.exists()) {
+        // Explicitly cast the data to AppEvent type
+        const eventData = eventSnapshot.data() as AppEvent;
+
+        if (eventData && eventData['attendees']) {  // Use bracket notation here
+          // Update the confirmed status for the current user in the attendees array
+          const updatedAttendees = eventData['attendees'].map((attendee) => {
+            if (attendee.email === currentUser.email) {
+              return { ...attendee, confirmedStatus: status };  // Update attendee status
+            }
+            return attendee;
+          });
+
+          // Pass the correct structure to updateDoc
+          await updateDoc(eventDoc, { attendees: updatedAttendees });
+
+          console.log(`Event attendance updated for user ${currentUser.email} with status ${status}`);
+
+        } else {
+          throw new Error('No attendees found for this event.');
+        }
+      } else {
+        throw new Error('Event not found.');
+      }
+    } catch (error) {
+      console.error('Error updating event attendance:', error);
+      throw error; // Pass the error up the stack
+    }
+  }
+
+
 }

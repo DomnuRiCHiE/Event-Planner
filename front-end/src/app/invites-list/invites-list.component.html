@@ -13,10 +13,12 @@
         <!-- Event Name -->
         <h3>{{ event.name }}</h3>
 
-        <!-- Event Location and Date -->
+        <!-- Event Location and Date and Organizer -->
         <p>{{ event.location }}</p>
-        <p>{{ event.startDate | date: 'medium' }} - {{ event.endDate | date: 'medium' }}</p>
-
+        <p>{{ event.startDate | date: 'short' }} - {{ event.endDate | date: 'short' }}</p>
+        <br>
+        <strong>Invited by organizer:</strong>
+        <p> {{event.organizerUserEmail}}</p>
 
         <!-- Attendees List -->
         <div class="attendees">
@@ -38,6 +40,13 @@
 
         <!-- Button to view event details -->
         <button (click)="viewEventDetails(event.eventId)">View Details</button>
+
+        <!-- Show Accept/Decline Buttons only if user has not responded -->
+        <button *ngIf="userResponse(event) === 'Unconfirmed'" class="accept" (click)="acceptEvent(event)">Accept</button>
+        <button *ngIf="userResponse(event) === 'Unconfirmed'" class="decline" (click)="declineEvent(event)">Decline</button>
+
+        <!-- Show Status Message -->
+        <p *ngIf="userResponse(event) !== 'Unconfirmed'">You have {{ userResponse(event) | lowercase }} this event.</p>
       </div>
     </li>
   </ul>
