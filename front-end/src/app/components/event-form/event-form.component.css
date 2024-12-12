@@ -261,6 +261,11 @@ input{
   margin-top: 10px;
 }
 
+.pac-container {
+  z-index: 1050 !important; /* Asigură-te că lista de sugestii apare peste alte elemente */
+}
+
+
 
 
 
