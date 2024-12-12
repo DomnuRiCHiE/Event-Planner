@@ -22,7 +22,7 @@
         <div class="attendees">
           <strong>Attendees:</strong>
           <ul>
-            <li *ngFor="let attendee of event.attendees">{{ attendee}}</li>
+            <li *ngFor="let attendee of event.attendees">{{ attendee.email}} - {{attendee.confirmedStatus}}</li>
           </ul>
         </div>
 

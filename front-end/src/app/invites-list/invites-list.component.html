@@ -20,6 +20,14 @@
         <strong>Invited by organizer:</strong>
         <p> {{event.organizerUserEmail}}</p>
 
+        <!-- Attendees List -->
+        <div class="attendees">
+          <strong>Attendees:</strong>
+          <ul>
+            <li *ngFor="let attendee of event.attendees">{{ attendee.email}} - {{attendee.confirmedStatus}}</li>
+          </ul>
+        </div>
+
         <!-- Event Schedule -->
         <div class="schedule">
           <strong>Event Schedule:</strong>
