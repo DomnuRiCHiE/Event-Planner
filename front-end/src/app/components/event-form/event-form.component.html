@@ -1,7 +1,8 @@
 <nav class="navbar">
   <button (click)="navigateTo('/login')">Login</button>
-  <button (click)="navigateTo('/events-list')">Event List</button>
-  <button (click)="navigateTo('/event-form')">Event Planner</button>
+  <button (click)="navigateTo('/events-list')">My Events</button>
+  <button (click)="navigateTo('/invites-list')">My Invites</button>
+  <button (click)="navigateTo('/event-form')">Create Event</button>
   <button (click)="navigateTo('/landing-page')">Landing Page</button>
 </nav>
 
@@ -69,7 +70,7 @@
           <p-card>
             <ng-template pTemplate="content">
               <div class="attendee-card-content">
-                <span>{{ attendee }}</span>
+                <span>{{ attendee.email }}</span>
                 <button
                   type="button"
                   (click)="removeAttendee(i)"

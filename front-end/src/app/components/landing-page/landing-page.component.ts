@@ -14,6 +14,10 @@ export class LandingPageComponent {
     this.router.navigate(['/events-list']);
   }
 
+  navigateToInvites():void{
+    this.router.navigate(['/invites-list']);
+  }
+
   navigateToCreateEvent(): void {
     this.router.navigate(['/event-form']);
   }
