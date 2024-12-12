@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { AppEvent } from '../../models/event.model';  // Import Event model
 import { CommonModule, DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
-import { FirebaseService } from '../../services/firebase.service';
+import {AppEvent} from '../models/event.model';
+import {FirebaseService} from '../services/firebase.service';
 
 @Component({
   selector: 'app-events-list',
@@ -11,10 +11,10 @@ import { FirebaseService } from '../../services/firebase.service';
     DatePipe,
     CommonModule
   ],
-  templateUrl: './events-list.component.html',
-  styleUrls: ['./events-list.component.css']
+  templateUrl: './invites-list.component.html',
+  styleUrls: ['./invites-list.component.css']
 })
-export class EventsListComponent implements OnInit {
+export class InvitesListComponent implements OnInit {
   events: AppEvent[] = [];
 
   constructor(private router: Router, private firebaseService: FirebaseService) { }
