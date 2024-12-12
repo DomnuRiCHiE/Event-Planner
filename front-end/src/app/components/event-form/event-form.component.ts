@@ -69,7 +69,7 @@ export class EventFormComponent {
     }
     const newAttendee: Attendee = {
       email: this.newAttendeeEmail.trim(),
-      confirmedStatus: 'unconfirmed',
+      confirmedStatus: 'Unconfirmed',
     };
 
     if (
@@ -172,7 +172,7 @@ export class EventFormComponent {
 
         const newAttendees: Attendee[] = emails.map(email => ({
           email: email.trim(),
-          confirmedStatus: 'unconfirmed',
+          confirmedStatus: 'Unconfirmed',
         }));
 
         const uniqueAttendees = newAttendees.filter(newAttendee =>

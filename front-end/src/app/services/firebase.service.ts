@@ -13,9 +13,13 @@ import {
     where,
     query,
     getDocs,
+    doc,
+    getDoc,
+    updateDoc,
+  DocumentReference
 } from "firebase/firestore";
 import { AppEvent } from "../models/event.model";
-import {doc, getDoc, updateDoc} from '@angular/fire/firestore';
+import {DocumentData} from '@angular/fire/compat/firestore';
 
 @Injectable({
     providedIn: "root",
@@ -72,6 +76,10 @@ export class FirebaseService {
             throw error; // Pass the error up to the caller
         }
     }
+
+  getCurrentUserEmail(): string | null {
+    return this.currentUser.email;
+  }
 
     async saveEvent(event: AppEvent): Promise<void> {
         try {
@@ -174,40 +182,50 @@ export class FirebaseService {
 
   async modifyEventAttendance(eventId: string, status: string): Promise<void> {
     try {
-      await this.authStatePromise;
+      await this.authStatePromise; // Ensure auth state is ready
 
       const currentUser = this.currentUser;
+
       if (!currentUser) {
-        throw new Error("No user is logged in");
+        throw new Error('No user is logged in');
       }
 
-      const eventDoc = doc(this.db, "Events", eventId);
+      // Define the document reference with the correct type
+      const eventDoc: DocumentReference<DocumentData, DocumentData> = doc(this.db, 'Events', eventId);
+
+      // Get the document snapshot
       const eventSnapshot = await getDoc(eventDoc);
 
+
       if (eventSnapshot.exists()) {
+        // Explicitly cast the data to AppEvent type
         const eventData = eventSnapshot.data() as AppEvent;
 
-        if (eventData.attendees) {
-          eventData.attendees = eventData.attendees.map(attendee => {
+        if (eventData && eventData['attendees']) {  // Use bracket notation here
+          // Update the confirmed status for the current user in the attendees array
+          const updatedAttendees = eventData['attendees'].map((attendee) => {
             if (attendee.email === currentUser.email) {
-              return { ...attendee, confirmedStatus: status };  // Change to 'accepted'
+              return { ...attendee, confirmedStatus: status };  // Update attendee status
             }
             return attendee;
           });
 
-          const updateData: Partial<AppEvent> = { attendees: eventData.attendees };
-          await updateDoc(eventDoc, updateData);
-          console.log("Event attendance confirmed!");
+          // Pass the correct structure to updateDoc
+          await updateDoc(eventDoc, { attendees: updatedAttendees });
+
+          console.log(`Event attendance updated for user ${currentUser.email} with status ${status}`);
+
         } else {
-          console.error("No attendees found for this event.");
+          throw new Error('No attendees found for this event.');
         }
       } else {
-        console.error("Event not found");
+        throw new Error('Event not found.');
       }
     } catch (error) {
-      console.error("Error confirming event attendance:", error);
-      throw error;
+      console.error('Error updating event attendance:', error);
+      throw error; // Pass the error up the stack
     }
   }
+
 
 }

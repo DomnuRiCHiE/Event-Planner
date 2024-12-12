@@ -45,7 +45,8 @@ export class InvitesListComponent implements OnInit {
   async acceptEvent(event: AppEvent): Promise<void> {
     try {
       await this.firebaseService.modifyEventAttendance(event.eventId!, 'Accepted');
-      console.log(`Declined event with ID: ${event.eventId}`);
+      console.log(`Accepted event with ID: ${event.eventId}`);
+      window.location.reload(); // This will reload the page
     } catch (error) {
       console.error('Error accepting event:', error); }
   }
@@ -54,10 +55,21 @@ export class InvitesListComponent implements OnInit {
     try {
       await this.firebaseService.modifyEventAttendance(event.eventId!, 'Declined');
       console.log(`Declined event with ID: ${event.eventId}`);
+      window.location.reload(); // This will reload the page
     } catch (error) {
       console.error('Error declining event:', error); }
   }
   navigateTo(route: string): void {
     this.router.navigate([route]);
   }
+
+  userResponse(event: AppEvent): string | undefined {
+    const currentUserEmail = this.firebaseService.getCurrentUserEmail();
+    if (event.attendees) {
+      const attendee = event.attendees.find(a => a.email === currentUserEmail);
+      return attendee?.confirmedStatus;
+    }
+    return ''; // If no attendee found
+  }
+
 }
