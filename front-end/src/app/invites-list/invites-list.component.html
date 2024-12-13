@@ -60,7 +60,7 @@
         </div>
 
         <!-- Button to view event details -->
-        <button (click)="viewEventDetails(event.eventId)">View Details</button>
+<!--        <button (click)="viewEventDetails(event.eventId)">View Details</button>-->
 
         <!-- Show Accept/Decline Buttons only if user has not responded -->
         <button *ngIf="userResponse(event) === 'Unconfirmed'" class="accept" (click)="acceptEvent(event)">Accept</button>
