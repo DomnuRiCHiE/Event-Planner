@@ -23,7 +23,6 @@ body {
   padding: 20px;
   background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white overlay */
   border-radius: 10px;
-  /* Make it have a dropshadow */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   color: #555;
 }
@@ -158,10 +157,10 @@ input{
   justify-content: space-between;
   align-items: center;
   padding: 15px 30px;
-  background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+  background-color: rgba(255, 255, 255, 0.9);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   font-family: 'Roboto', sans-serif;
-  z-index: 10; /* Ensure it's above other content */
+  z-index: 10;
   margin-bottom: 20px;
 }
 
@@ -178,7 +177,7 @@ input{
 }
 
 .navbar button i {
-  margin-right: 8px; /* Adjust the spacing as needed */
+  margin-right: 8px;
 }
 
 .navbar button:hover {
