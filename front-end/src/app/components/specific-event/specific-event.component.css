@@ -1,0 +1,202 @@
+/* General container styles */
+.specific-event {
+    margin: 2rem auto;
+    padding: 2rem;
+    max-width: 800px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Event Name */
+.event-name {
+    font-size: 2rem;
+    color: #007bff;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+/* Event Details */
+.event-details {
+    margin-bottom: 2rem;
+}
+
+.event-details p {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+}
+
+.event-details strong {
+    color: #555;
+}
+
+/* Attendees Section */
+.attendees {
+    margin-bottom: 2rem;
+}
+
+.attendees h2 {
+    font-size: 1.5rem;
+    color: #444;
+    margin-bottom: 0.5rem;
+    border-bottom: 2px solid #007bff;
+    display: inline-block;
+}
+
+.attendee-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.attendee-item {
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Conditional Styling for Attendee Status */
+.attendee-item.unconfirmed {
+    background-color: #ffe6e6;
+    /* Light red for unconfirmed */
+    border-color: #ffcccc;
+}
+
+.attendee-item.confirmed {
+    background-color: #e6ffe6;
+    /* Light green for confirmed */
+    border-color: #ccffcc;
+}
+
+.attendee-item span {
+    font-size: 1rem;
+}
+
+/* Schedule Section */
+.schedule {
+    margin-bottom: 2rem;
+}
+
+.schedule h2 {
+    font-size: 1.5rem;
+    color: #444;
+    margin-bottom: 0.5rem;
+    border-bottom: 2px solid #007bff;
+    display: inline-block;
+}
+
+.schedule-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.schedule-item {
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    font-size: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.schedule-item strong {
+    color: #007bff;
+    font-weight: bold;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .specific-event {
+        padding: 1rem;
+    }
+
+    .event-name {
+        font-size: 1.5rem;
+    }
+
+    .attendees h2,
+    .schedule h2 {
+        font-size: 1.25rem;
+    }
+
+    .attendee-item,
+    .schedule-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* Navbar Container */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background: linear-gradient(90deg, #ff9a9e, #fad0c4, #a18cd1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Navbar Buttons */
+.navbar button {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #28a745;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.navbar button:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.navbar button:active {
+    transform: scale(0.98);
+    background-color: #1e7e34;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.navbar .navbar-section {
+    display: flex;
+    gap: 20px;
+}
+
+/* Responsive Navbar */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 20px;
+    }
+
+    .navbar .navbar-section {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .navbar button {
+        width: 100%;
+        max-width: 300px;
+    }
+}

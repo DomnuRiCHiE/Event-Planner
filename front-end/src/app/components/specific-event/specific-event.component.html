@@ -1,0 +1,50 @@
+<nav class="navbar">
+  <button (click)="navigateTo('/login')">Login</button>
+  <button (click)="navigateTo('/events-list')">My Events</button>
+  <button (click)="navigateTo('/invites-list')">My Invites</button>
+  <button (click)="navigateTo('/event-form')">Create Event</button>
+  <button (click)="navigateTo('/landing-page')">Landing Page</button>
+</nav>
+
+<div class="specific-event">
+  <!-- Event Name -->
+  <h1 class="event-name">{{ event.name }}</h1>
+
+  <!-- Event Details -->
+  <div class="event-details">
+    <p><strong>Organizer:</strong> {{ event.organizerUserEmail }}</p>
+    <p><strong>Location:</strong> {{ event.location }}</p>
+    <p><strong>Start Date:</strong> {{ event.startDate | date: 'medium' }}</p>
+    <p><strong>End Date:</strong> {{ event.endDate | date: 'medium' }}</p>
+  </div>
+
+  <!-- Attendees Section -->
+  <div class="attendees">
+    <h2>Attendees</h2>
+    <ul class="attendee-list">
+      <li
+        *ngFor="let attendee of event.attendees"
+        class="attendee-item"
+        [ngClass]="{
+          'unconfirmed': attendee.confirmedStatus === 'Unconfirmed',
+          'confirmed': attendee.confirmedStatus === 'Accepted'
+        }"
+      >
+        <span>
+          <strong>{{ attendee.name }}</strong> ({{ attendee.email }})
+        </span>
+        {{ attendee.confirmedStatus }}
+      </li>
+    </ul>
+  </div>
+
+  <!-- Schedule Section -->
+  <div class="schedule">
+    <h2>Schedule</h2>
+    <ul class="schedule-list">
+      <li *ngFor="let item of event.schedule" class="schedule-item">
+        <strong>{{ item.time | date: 'medium' }}</strong> {{ item.description }}
+      </li>
+    </ul>
+  </div>
+</div>
