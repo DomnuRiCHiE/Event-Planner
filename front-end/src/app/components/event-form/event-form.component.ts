@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, NgZone, ViewChild, AfterViewInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
@@ -9,8 +9,14 @@ import { AppEvent } from '../../models/event.model';
 import { Schedule } from '../../models/schedule.model';
 import { Attendee } from '../../models/attendee.model';
 import { FirebaseService } from '../../services/firebase.service';
-import { Router } from '@angular/router';
-import * as XLSX from 'xlsx';
+
+import {Router} from '@angular/router'; // Ensure FirebaseService is implemented
+import * as XLSX from 'xlsx'; // Library to read Excel files
+
+
+
+declare const google: any; // Adaugă această linie după importuri
+
 
 @Component({
   selector: 'event-form',
@@ -26,7 +32,7 @@ import * as XLSX from 'xlsx';
     CardModule,
   ],
 })
-export class EventFormComponent {
+export class EventFormComponent implements AfterViewInit{
   event: AppEvent = {
     name: '',
     startDate: new Date(),
@@ -47,7 +53,32 @@ export class EventFormComponent {
   newAttendeeEmail: string = '';
   isSubmitting = false;
 
-  constructor(private firebaseService: FirebaseService, private router: Router) {}
+  @ViewChild('locationInput', { static: false }) locationInput!: ElementRef; // Inputul pentru locație
+  constructor(private firebaseService: FirebaseService, private router: Router, private ngZone: NgZone) {}
+
+
+  ngAfterViewInit() {
+    const autocomplete = new google.maps.places.Autocomplete(this.locationInput.nativeElement, {
+      types: ['geocode'], // Sugerează locații
+    });
+
+    // Ascultă selecția locației
+    autocomplete.addListener('place_changed', () => {
+      this.ngZone.run(() => {
+        const place = autocomplete.getPlace();
+        console.log('Obiectul place:', place); // Loghează obiectul complet
+
+        if (place.geometry) {
+          this.event.location = place.formatted_address || '';
+          console.log('Selected location:', this.event.location);
+        } else {
+          alert('Please select a valid location!');
+        }
+      });
+    });
+
+  }
+
 
   navigateTo(route: string): void {
     this.router.navigate([route]);
