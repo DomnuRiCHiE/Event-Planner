@@ -186,20 +186,21 @@
 
     <!-- Add and Submit Buttons -->
     <div class="form-actions">
-      <button class="add-button"
-        type="button"
-        (click)="addCustomSchedule()"
-        pButton
-        label="Add Schedule"
-        icon="pi pi-plus"
-      ></button>
-      <button class="submit-button"
-        type="submit"
-        pButton
-        label="Submit and send invitations"
-        icon="pi pi-check"
-        [disabled]="isSubmitting"
-      ></button>
-    </div>
+  <button class="add-button"
+    type="button"
+    (click)="addCustomSchedule()"
+    pButton
+    label="Add Schedule"
+    icon="pi pi-plus"
+  ></button>
+  <button class="submit-button"
+    type="submit"
+    pButton
+    [label]="eventId ? 'Update Event' : 'Submit and send invitations'"
+    icon="pi pi-check"
+    [disabled]="isSubmitting"
+  ></button>
+</div>
+
   </form>
 </div>

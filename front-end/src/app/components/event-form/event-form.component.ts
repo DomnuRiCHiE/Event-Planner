@@ -10,7 +10,7 @@ import { Schedule } from '../../models/schedule.model';
 import { Attendee } from '../../models/attendee.model';
 import { FirebaseService } from '../../services/firebase.service';
 
-import {Router} from '@angular/router'; // Ensure FirebaseService is implemented
+import {ActivatedRoute, Router} from '@angular/router'; // Ensure FirebaseService is implemented
 import * as XLSX from 'xlsx'; // Library to read Excel files
 
 
@@ -43,6 +43,8 @@ export class EventFormComponent implements AfterViewInit{
     attendees: [],
   };
 
+  eventId: string | null = null;
+
   schedules: Schedule[] = [];
 
   customSchedule: Schedule = {
@@ -54,8 +56,15 @@ export class EventFormComponent implements AfterViewInit{
   isSubmitting = false;
 
   @ViewChild('locationInput', { static: false }) locationInput!: ElementRef; // Inputul pentru locație
-  constructor(private firebaseService: FirebaseService, private router: Router, private ngZone: NgZone) {}
+  constructor(private firebaseService: FirebaseService, private router: Router, private ngZone: NgZone, private route: ActivatedRoute) {}
 
+  ngOnInit() {
+    const eventId = this.route.snapshot.paramMap.get('id');
+    if (eventId) {
+      this.eventId = eventId;
+      this.loadEventDetails();
+    }
+  }
 
   ngAfterViewInit() {
     const autocomplete = new google.maps.places.Autocomplete(this.locationInput.nativeElement, {
@@ -79,6 +88,39 @@ export class EventFormComponent implements AfterViewInit{
 
   }
 
+  private convertFirebaseTimestamp(timestamp: any): Date {
+    if (timestamp && timestamp.seconds) {
+      return new Date(timestamp.seconds * 1000); // Convert seconds to milliseconds
+    }
+    return new Date(); // Default to the current date
+  }
+
+
+  async loadEventDetails() {
+    try {
+      const fetchedEvent = await this.firebaseService.getEventById(this.eventId!);
+
+      if (fetchedEvent) {
+        // Convert startDate and endDate from Firebase Timestamp to JavaScript Date
+        this.event = {
+          ...fetchedEvent,
+          startDate: this.convertFirebaseTimestamp(fetchedEvent.startDate),
+          endDate: this.convertFirebaseTimestamp(fetchedEvent.endDate),
+        };
+
+        // Convert the schedule times to JavaScript Date objects
+        this.schedules = (fetchedEvent.schedule || []).map(schedule => ({
+          description: schedule.description || '',
+          time: this.convertFirebaseTimestamp(schedule.time),
+        }));
+      } else {
+        alert('Event not found!');
+      }
+    } catch (error) {
+      console.error('Error loading event details:', error);
+      alert('Failed to load event details.');
+    }
+  }
 
   navigateTo(route: string): void {
     this.router.navigate([route]);
@@ -133,16 +175,23 @@ export class EventFormComponent implements AfterViewInit{
     }
 
     this.isSubmitting = true;
+    this.event.schedule = [...this.schedules];
+
     try {
-      console.log('Submitting event...');
-      this.event.schedule = [...this.schedules];
-      await this.firebaseService.saveEvent(this.event);
-      console.log('Event saved:', this.event);
-      alert('Event saved successfully!');
-      this.resetForm();
+      if (this.eventId) {
+        // Update existing event
+        await this.firebaseService.updateEvent(this.eventId, this.event);
+        alert('Event updated successfully!');
+      } else {
+        // Save new event
+        await this.firebaseService.saveEvent(this.event);
+        alert('Event created successfully!');
+      }
+
+      this.router.navigate(['/events-list']);
     } catch (error) {
-      console.error('Error saving event:', error);
-      alert('Failed to save event.');
+      console.error('Error saving/updating event:', error);
+      alert('Failed to save or update event.');
     } finally {
       this.isSubmitting = false;
     }

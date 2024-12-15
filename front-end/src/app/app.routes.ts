@@ -14,7 +14,8 @@ export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
     {path: 'invites-list', component: InvitesListComponent},
     { path: 'landing-page', component: LandingPageComponent },
-    { path: 'event/:id', component: SpecificEventComponent }
+    { path: 'event/:id', component: SpecificEventComponent },
+    { path: 'event-form/:id', component: EventFormComponent }
 ];
 
 @NgModule({

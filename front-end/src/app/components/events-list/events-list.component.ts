@@ -52,4 +52,9 @@ export class EventsListComponent implements OnInit {
   navigateTo(route: string): void {
     this.router.navigate([route]);
   }
+
+  editEvent(event: any): void {
+    this.router.navigate(['/event-form', event.eventId]);
+  }
+
 }

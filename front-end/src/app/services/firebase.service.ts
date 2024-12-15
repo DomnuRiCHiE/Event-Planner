@@ -250,5 +250,48 @@ export class FirebaseService {
     }
   }
 
+  async updateEvent(eventId: string, updatedEvent: AppEvent): Promise<void> {
+    //only if the logged in user is the organizer of the event
+    const eventSnapshot = await getDoc(doc(this.db, 'Events', eventId));
+    if (eventSnapshot.exists()) {
+      const eventData = eventSnapshot.data() as AppEvent;
+      if (eventData.organizerUserEmail !== this.currentUser.email) {
+        alert("User is not the organizer of the event");
+        throw new Error("User is not the organizer of the event");
+      }
+    } else {
+      console.error("Event not found");
+      throw new Error("Event not found");
+    }
+    try {
+      // Wait for the authentication state to be determined
+      await this.authStatePromise;
+
+      // Check if the user is logged in
+      const currentUser = this.currentUser;
+
+      if (!currentUser) {
+        throw new Error("No user is logged in");
+      }
+
+      // Reference the specific document in the "Events" collection
+      const eventDoc = doc(this.db, 'Events', eventId);
+
+      // Ensure the "organizerUserEmail" is not overwritten and matches the current user
+      updatedEvent.organizerUserEmail = currentUser.email;
+
+      // Update the document in Firestore
+      await updateDoc(eventDoc, {
+        ...updatedEvent,
+        updatedAt: new Date() // Optionally add an 'updatedAt' timestamp
+      });
+
+      console.log("Event updated successfully!");
+    } catch (error) {
+      console.error("Error updating event:", error);
+      throw error; // Pass the error up to the caller
+    }
+  }
+
 
 }
