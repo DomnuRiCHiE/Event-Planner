@@ -69,7 +69,6 @@ export class FirebaseService {
                 email,
                 password
             );
-            console.log("User logged in:", userCredential.user);
             this.currentUser = userCredential.user;
         } catch (error) {
             console.error("Error during login:", error);
@@ -290,6 +289,50 @@ export class FirebaseService {
     } catch (error) {
       console.error("Error updating event:", error);
       throw error; // Pass the error up to the caller
+    }
+  }
+
+  async getConfirmedAttendeeEvents(): Promise<AppEvent[]> {
+    try {
+      // Wait for the authentication state to be determined
+      await this.authStatePromise;
+
+      // Check if user is logged in
+      const currentUser = this.currentUser;
+      if (!currentUser) {
+        throw new Error("No user is logged in");
+      }
+
+      const eventsCollection = collection(this.db, "Events");
+
+      // Fetch all events from the "Events" collection
+      const querySnapshot = await getDocs(eventsCollection);
+
+      const confirmedEvents: AppEvent[] = [];
+
+      // Iterate through each event document
+      querySnapshot.forEach((doc) => {
+        const eventData = doc.data() as AppEvent;
+
+        // Check if attendees array exists and contains the current user with 'Accepted' status
+        if (
+          eventData.attendees &&
+          eventData.attendees.some(
+            (attendee) =>
+              attendee.email === currentUser.email &&
+              attendee.confirmedStatus === "Accepted"
+          )
+        ) {
+          // Include the eventId (Firestore document ID)
+          eventData.eventId = doc.id;
+          confirmedEvents.push(eventData);
+        }
+      });
+
+      return confirmedEvents;
+    } catch (error) {
+      console.error("Error fetching confirmed attendee events:", error);
+      throw error;
     }
   }
 

@@ -18,15 +18,16 @@ import { SpecificEventComponent } from '../specific-event/specific-event.compone
   styleUrls: ['./events-list.component.css']
 })
 export class EventsListComponent implements OnInit {
-  events: AppEvent[] = [];
-  selectedEvent: any = null;
+  createdEvents: AppEvent[] = [];
+  acceptedEvents: AppEvent[] = [];
+  selectedEvent: AppEvent | null = null;
 
   constructor(private router: Router, private firebaseService: FirebaseService) { }
 
   async ngOnInit(): Promise<void> {
     try {
       const eventsData = await this.firebaseService.getLoggedInUsersEvents();
-      this.events = eventsData.map(event => ({
+      this.createdEvents = eventsData.map(event => ({
         ...event,
         startDate: (event.startDate as unknown as Timestamp).toDate(),
         endDate: (event.endDate as unknown as Timestamp).toDate(),
@@ -38,6 +39,14 @@ export class EventsListComponent implements OnInit {
     } catch (error) {
       console.error('Error getting events:', error);
     }
+
+    try {
+      this.acceptedEvents = await this.firebaseService.getConfirmedAttendeeEvents();
+    } catch (error) {
+      console.error("Error loading confirmed events:", error);
+    }
+
+
   }
 
 
