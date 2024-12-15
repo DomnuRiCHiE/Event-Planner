@@ -3,7 +3,7 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword, Auth } from 'firebase/auth';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import { Event } from '../models/event.model';
-import { HttpClient } from '@angular/common/http';
+import axios from 'axios';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +11,9 @@ import { HttpClient } from '@angular/common/http';
 export class FirebaseService {
   private auth: Auth;
   private db;
-  private apiUrl = 'http://localhost:8080/api/emails/send'; // Replace with your Spring Boot server URL
+  private apiUrl = 'http://localhost:8080/api/send-email';
 
-
-  constructor(private http: HttpClient) {
+  constructor() {
     const firebaseConfig = {
       apiKey: "AIzaSyC5ftHFsiiB5VC71rre52EDHMVpvi_5aAY",
       authDomain: "mybigday-53567.firebaseapp.com",
@@ -31,14 +30,18 @@ export class FirebaseService {
     this.db = getFirestore(app);
   }
 
-  sendEmail(to: string, subject: string, text: string) {
-    return this.http.post(this.apiUrl, null, {
-      params: {
+  async sendEmail(to: string, subject: string, text: string): Promise<any> {
+    try {
+      const response = await axios.post(this.apiUrl, {
         to,
         subject,
         text,
-      },
-    });
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error sending email:', error);
+      throw error;
+    }
   }
 
   async loginWithEmail(email: string, password: string): Promise<void> {
@@ -50,6 +53,7 @@ export class FirebaseService {
       throw error; // Pass the error up to the caller
     }
   }
+
   async saveEvent(event: Event): Promise<void> {
     try {
       // Get the current user's ID from Firebase Auth
@@ -72,5 +76,4 @@ export class FirebaseService {
       throw error; // Pass the error up to the caller
     }
   }
-
 }

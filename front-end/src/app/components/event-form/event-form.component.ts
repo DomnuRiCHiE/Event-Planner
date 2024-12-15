@@ -103,18 +103,19 @@ export class EventFormComponent {
       console.log('Event saved:', this.event);
 
       // Send emails to attendees
-      const subject = `Invitation to ${this.event.name}`;
-      const text = `You are invited to ${this.event.name} at ${this.event.location} from ${this.event.startDate} to ${this.event.endDate}.`;
+      const subject = `You're Invited to ${this.event.name}`;
+      const text = `Hello,\n\nYou have been invited to the event "${this.event.name}" at ${this.event.location}.\n\nBest Regards,\nThe Event Team`;
 
-      for (const attendee of this.event.attendees) {
-        await this.firebaseService.sendEmail(attendee.toString(), subject, text).toPromise();
-      }
+      const emailPromises = this.event.attendees.map((attendee) =>
+        this.firebaseService.sendEmail(attendee.toString(), subject, text)
+      );
 
-      alert('Event saved and invitations sent successfully!');
+      await Promise.all(emailPromises); // Wait for all emails to be sent
+      alert('Event saved successfully, and invitations sent!');
       this.resetForm();
     } catch (error) {
       console.error('Error saving event:', error);
-      alert('Failed to save event.');
+      alert('Failed to save event or send invitations.');
     } finally {
       this.isSubmitting = false;
     }

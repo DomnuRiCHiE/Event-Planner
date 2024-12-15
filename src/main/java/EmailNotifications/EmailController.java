@@ -1,23 +1,24 @@
 package EmailNotifications;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/emails")
+@RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:4200")
 public class EmailController {
     @Autowired
     private EmailService emailService;
 
-    @PostMapping("/send")
-    public String sendEmail(@RequestParam String to,
-                            @RequestParam String subject,
-                            @RequestParam String text) {
+    @PostMapping("/send-email")
+    public ResponseEntity<String> sendEmail(@RequestBody EmailRequest emailRequest) {
         try {
-            emailService.sendEmail(to, subject, text);
-            return "Email sent successfully!";
+            emailService.sendSimpleMessage(emailRequest.getTo(), emailRequest.getSubject(), emailRequest.getText());
+            return ResponseEntity.ok("Email sent successfully.");
         } catch (Exception e) {
-            return "Failed to send email: " + e.getMessage();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error sending email: " + e.getMessage());
         }
     }
 }
