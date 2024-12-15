@@ -4,19 +4,22 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FirebaseService } from '../../services/firebase.service';
 import { Timestamp } from '@angular/fire/firestore';
+import { SpecificEventComponent } from '../specific-event/specific-event.component';
 
 
 @Component({
   selector: 'app-events-list',
   standalone: true,
   imports: [
-    CommonModule
+    CommonModule,
+    SpecificEventComponent
   ],
   templateUrl: './events-list.component.html',
   styleUrls: ['./events-list.component.css']
 })
 export class EventsListComponent implements OnInit {
   events: AppEvent[] = [];
+  selectedEvent: any = null;
 
   constructor(private router: Router, private firebaseService: FirebaseService) { }
 
@@ -38,11 +41,20 @@ export class EventsListComponent implements OnInit {
   }
 
 
-  viewEventDetails(eventId: string | undefined): void {
-    console.log('Viewing details for event with ID:', eventId);
+  viewEventDetails(event: any): void {
+    this.router.navigate(['/event', event.eventId]); // Navigate to the event's detail page
+  }
+
+  clearSelectedEvent(): void {
+    this.selectedEvent = null;
   }
 
   navigateTo(route: string): void {
     this.router.navigate([route]);
   }
+
+  editEvent(event: any): void {
+    this.router.navigate(['/event-form', event.eventId]);
+  }
+
 }
