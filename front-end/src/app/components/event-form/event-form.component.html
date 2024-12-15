@@ -1,11 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Event</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Roboto:wght@300&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
 <nav class="navbar">
-  <button (click)="navigateTo('/login')">Login</button>
-  <button (click)="navigateTo('/events-list')">My Events</button>
-  <button (click)="navigateTo('/invites-list')">My Invites</button>
-  <button (click)="navigateTo('/event-form')">Create Event</button>
-  <button (click)="navigateTo('/landing-page')">Landing Page</button>
+  <button (click)="navigateTo('/login')">
+    <i class="fas fa-sign-out-alt"></i> Logout
+  </button>
+  <button (click)="navigateTo('/events-list')">
+    <i class="fas fa-calendar-alt"></i> My Events
+  </button>
+  <button (click)="navigateTo('/invites-list')">
+    <i class="fas fa-envelope"></i> My Invites
+  </button>
+  <button (click)="navigateTo('/event-form')">
+    <i class="fas fa-plus"></i> Create Event
+  </button>
+<!--  <button (click)="navigateTo('/landing-page')">-->
+<!--    <i class="fas fa-home"></i> Landing Page-->
+<!--  </button>-->
 </nav>
 
+
+<div class="background-overlay"></div>
 <div class="container">
   <form (ngSubmit)="onSubmit()" class="event-form">
     <!-- Event Name and Location -->
@@ -203,3 +225,4 @@
     </div>
   </form>
 </div>
+</body>

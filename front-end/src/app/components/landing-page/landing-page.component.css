@@ -1,11 +1,76 @@
 .landing-page {
-  text-align: center;
-  margin-top: 50px;
+  font-family: 'Roboto', sans-serif;
+  background: url('../../../../public/wedding-background.jpg') no-repeat center center/cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  color: #444;
+  position: relative;
 }
 
+.background-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.7);
+  z-index: -1;
+}
+
+.landing-container {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 30px 50px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  border-radius: 15px;
+  text-align: center;
+  max-width: 1200px;
+}
+
+h1 {
+  font-family: 'Roboto', sans-serif;
+  font-size: 2.4em;
+  color: #a56336;
+  margin-bottom: 20px;
+}
+
+p {
+  font-size: 1.2em;
+  margin-bottom: 30px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between; /* Adjust spacing between buttons */
+  align-items: center;
+}
 button {
   margin: 10px;
-  padding: 10px 20px;
+  padding: 10px 30px;
   font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  background-color: #a56336;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex; /* Aligns icon and text side-by-side */
+  justify-content: center;
+  align-items: center;
+  gap: 10px; /* Adds space between icon and text */
+  flex-grow: 1;
+  max-width: 300px;
+}
+
+button i {
+  font-size: 18px; /* Size of the icon */
+}
+
+button:hover {
+  background-color: #8c4d2d;
 }
