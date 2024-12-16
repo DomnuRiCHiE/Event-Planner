@@ -1,20 +1,20 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
+import { provideHttpClient } from '@angular/common/http';
 
-import {AngularFirestoreModule} from '@angular/fire/compat/firestore';
-import {AngularFireAuthModule} from '@angular/fire/compat/auth';
+// ...existing code...
 
 @NgModule({
   declarations: [
-
+    AppComponent,
+    // ...existing code...
   ],
   imports: [
     FormsModule,
-    AngularFireAuthModule,
-    AngularFirestoreModule,
+    // ...existing code...
   ],
-  providers: [],
+  providers: [provideHttpClient()],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
