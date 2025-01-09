@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Event</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Roboto:wght@300&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="background-overlay"></div>
+<nav class="navbar">
+  <button (click)="navigateTo('/login')">
+    <i class="fas fa-sign-out-alt"></i> Logout
+  </button>
+  <button (click)="navigateTo('/events-list')">
+    <i class="fas fa-calendar-alt"></i> My Events
+  </button>
+  <button (click)="navigateTo('/invites-list')">
+    <i class="fas fa-envelope"></i> My Invites
+  </button>
+  <button (click)="navigateTo('/event-form')">
+    <i class="fas fa-plus"></i> Create Event
+  </button>
+<!--  <button (click)="navigateTo('/landing-page')">-->
+<!--    <i class="fas fa-home"></i> Landing Page-->
+<!--  </button>-->
+</nav>
+
+<div *ngIf="events.length > 0; else noEvents">
+  <ul class="no-bullet">
+    <li *ngFor="let event of events">
+      <div class="event-card">
+        <!-- Event Name -->
+        <h3>{{ event.name }}</h3>
+
+        <!-- Event Location and Date and Organizer -->
+        <p>{{ event.location }}</p>
+        <p>{{ event.startDate | date: 'short' }} - {{ event.endDate | date: 'short' }}</p>
+        <br>
+        <strong>Invited by organizer:</strong>
+        <p> {{event.organizerUserEmail}}</p>
+
+        <!-- Attendees List -->
+        <div class="attendees">
+          <strong>Attendees:</strong>
+          <ul>
+            <li *ngFor="let attendee of event.attendees">{{ attendee.email}} - {{attendee.confirmedStatus}}</li>
+          </ul>
+        </div>
+
+        <!-- Event Schedule -->
+        <div class="schedule">
+          <strong>Event Schedule:</strong>
+          <ul>
+            <li *ngFor="let item of event.schedule">
+              <span>{{ item.time | date: 'shortTime' }} - {{ item.description }}</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Button to view event details -->
+<!--        <button (click)="viewEventDetails(event.eventId)">View Details</button>-->
+
+        <!-- Show Accept/Decline Buttons only if user has not responded -->
+        <button *ngIf="userResponse(event) === 'Unconfirmed'" class="accept" (click)="acceptEvent(event)">Accept</button>
+        <button *ngIf="userResponse(event) === 'Unconfirmed'" class="decline" (click)="declineEvent(event)">Decline</button>
+
+        <!-- Show Status Message -->
+        <p *ngIf="userResponse(event) !== 'Unconfirmed'">You have {{ userResponse(event) | lowercase }} this event.</p>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<!-- If no events are available -->
+<ng-template #noEvents>
+  <p>No events to display.</p>
+</ng-template>
+
+</body>
+</html>

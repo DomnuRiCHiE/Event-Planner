@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Login - Event</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Roboto:wght@300&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <nav class="navbar">
+            <button (click)="navigateTo('/login')">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+            <button (click)="navigateTo('/events-list')">
+                <i class="fas fa-calendar-alt"></i> My Events
+            </button>
+            <button (click)="navigateTo('/invites-list')">
+                <i class="fas fa-envelope"></i> My Invites
+            </button>
+            <button (click)="navigateTo('/event-form')">
+                <i class="fas fa-plus"></i> Create Event
+            </button>
+            <!--  <button (click)="navigateTo('/landing-page')">-->
+            <!--    <i class="fas fa-home"></i> Landing Page-->
+            <!--  </button>-->
+        </nav>
+
+        <h1>Created Events</h1>
+        <div *ngIf="createdEvents.length > 0; else noEvents">
+            <ul class="no-bullet">
+                <li *ngFor="let event of createdEvents">
+                    <div class="event-card">
+                        <!-- Event Name -->
+                        <h3>{{ event.name }}</h3>
+
+                        <!-- Event Location and Date -->
+                        <p>{{ event.location }}</p>
+                        <p>
+                            {{ event.startDate | date: 'medium' }} - {{
+                            event.endDate | date: 'medium' }}
+                        </p>
+
+                        <!-- Attendees List -->
+                        <div class="attendees">
+                            <strong>Attendees:</strong>
+                            <ul>
+                                <li *ngFor="let attendee of event.attendees">
+                                    {{ attendee.email}} -
+                                    {{attendee.confirmedStatus}}
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Event Schedule -->
+                        <div class="schedule">
+                            <strong>Event Schedule:</strong>
+                            <ul>
+                                <li *ngFor="let item of event.schedule">
+                                    <span
+                                        >{{ item.time | date: 'shortTime' }} -
+                                        {{ item.description }}</span
+                                    >
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Button to view event details -->
+                        <button (click)="viewEventDetails(event)">
+                            View Details
+                        </button>
+                        <button
+                            (click)="editEvent(event)"
+                            style="margin-left: 20px;"
+                        >
+                            Edit
+                        </button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <h1>Accepted Events</h1>
+        <div *ngIf="acceptedEvents.length > 0; else noEvents">
+            <ul class="no-bullet">
+                <li *ngFor="let event of acceptedEvents">
+                    <div class="event-card">
+                        <!-- Event Name -->
+                        <h3>{{ event.name }}</h3>
+
+                        <!-- Event Location and Date -->
+                        <p>{{ event.location }}</p>
+                        <p>
+                            {{ event.startDate | date: 'medium' }} - {{
+                            event.endDate | date: 'medium' }}
+                        </p>
+
+                        <!-- Attendees List -->
+                        <div class="attendees">
+                            <strong>Attendees:</strong>
+                            <ul>
+                                <li *ngFor="let attendee of event.attendees">
+                                    {{ attendee.email}} -
+                                    {{attendee.confirmedStatus}}
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Event Schedule -->
+                        <div class="schedule">
+                            <strong>Event Schedule:</strong>
+                            <ul>
+                                <li *ngFor="let item of event.schedule">
+                                    <span
+                                        >{{ item.time | date: 'shortTime' }} -
+                                        {{ item.description }}</span
+                                    >
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Button to view event details -->
+                        <button (click)="viewEventDetails(event)">
+                            View Details
+                        </button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- If no events are available -->
+        <ng-template #noEvents>
+            <p>No events to display.</p>
+        </ng-template>
+    </body>
+</html>

@@ -1,16 +1,18 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
-// ...existing code...
+
+import {AngularFirestoreModule} from '@angular/fire/compat/firestore';
+import {AngularFireAuthModule} from '@angular/fire/compat/auth';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    // ...existing code...
+
   ],
   imports: [
     FormsModule,
-    // ...existing code...
+    AngularFireAuthModule,
+    AngularFirestoreModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

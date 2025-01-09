@@ -1,143 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Event</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Roboto:wght@300&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar">
+  <button (click)="navigateTo('/login')">
+    <i class="fas fa-sign-out-alt"></i> Logout
+  </button>
+  <button (click)="navigateTo('/events-list')">
+    <i class="fas fa-calendar-alt"></i> My Events
+  </button>
+  <button (click)="navigateTo('/invites-list')">
+    <i class="fas fa-envelope"></i> My Invites
+  </button>
+  <button (click)="navigateTo('/event-form')">
+    <i class="fas fa-plus"></i> Create Event
+  </button>
+<!--  <button (click)="navigateTo('/landing-page')">-->
+<!--    <i class="fas fa-home"></i> Landing Page-->
+<!--  </button>-->
+</nav>
+
+
+<div class="background-overlay"></div>
 <div class="container">
-    <form (ngSubmit)="onSubmit()" class="event-form">
-        <!-- Event Name and Location in Grid Layout -->
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                <label for="name">Event Name</label>
-                <input
-                    type="text"
-                    pInputText
-                    id="name"
-                    [(ngModel)]="event.name"
-                    name="name"
-                    class="form-control"
-                />
-            </div>
-            <div class="form-group col-md-6">
-                <label for="location">Location</label>
-                <input
-                    type="text"
-                    pInputText
-                    pInputText
-                    id="location"
-                    [(ngModel)]="event.location"
-                    name="location"
-                    class="form-control"
-                />
-            </div>
-        </div>
+  <form (ngSubmit)="onSubmit()" class="event-form">
+    <!-- Event Name and Location -->
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="name">Event Name</label>
+        <input
+          type="text"
+          pInputText
+          id="name"
+          [(ngModel)]="event.name"
+          name="name"
+          class="form-control"
+          required
+        />
+      </div>
+      <div class="form-group col-md-6">
+        <label for="location">Location</label>
+        <input
+          type="text"
+          pInputText
+          id="location"
+          #locationInput
+          [(ngModel)]="event.location"
+          name="location"
+          class="form-control"
+          required
+        />
+      </div>
+    </div>
 
-        <!-- Date Inputs in Grid Layout -->
-        <div class="form-row">
-            <div class="form-group col-md-4">
-                <label for="startDate">Start Date</label>
+    <!-- Date Inputs -->
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="startDate">Start Date</label>
+        <p-calendar
+          id="startDate"
+          [(ngModel)]="event.startDate"
+          name="startDate"
+          dateFormat="yy-mm-dd"
+          hourFormat="24"
+          required
+        ></p-calendar>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="endDate">End Date</label>
+        <p-calendar
+          id="endDate"
+          [(ngModel)]="event.endDate"
+          name="endDate"
+          dateFormat="yy-mm-dd"
+          hourFormat="24"
+          required
+        ></p-calendar>
+      </div>
+    </div>
+
+    <!-- Attendees Section -->
+    <div class="form-group">
+      <label>Attendees</label>
+      <div class="attendees-cards">
+        <div *ngFor="let attendee of event.attendees; let i = index" class="attendee-card">
+          <p-card>
+            <ng-template pTemplate="content">
+              <div class="attendee-card-content">
+                <span>{{ attendee.email }}</span>
+                <button
+                  type="button"
+                  (click)="removeAttendee(i)"
+                  pButton
+                  icon="pi pi-times"
+                  class="remove-button"
+                ></button>
+              </div>
+            </ng-template>
+          </p-card>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-12">
+        <label for="attendeeEmail">Add Attendee (Email)</label>
+        <input
+          type="email"
+          pInputText
+          id="attendeeEmail"
+          [(ngModel)]="newAttendeeEmail"
+          name="attendeeEmail"
+          class="form-control"
+        />
+      </div>
+    </div>
+    <div class="form-actions">
+      <button
+        type="button"
+        (click)="addAttendee()"
+        pButton
+        label="Add Attendee"
+        icon="pi pi-plus"
+        class="add-button"
+      ></button>
+      <input
+        type="file"
+        accept=".xlsx, .xls"
+        id="excelFileInput"
+        (change)="onExcelFileUpload($event)"
+        style="display: none;"
+      />
+      <button
+        type="button"
+        (click)="triggerExcelUpload()"
+        pButton
+        label="Import from Excel"
+        icon="pi pi-upload"
+        class="submit-button"
+      ></button>
+    </div>
+
+
+    <!-- Schedule Section -->
+    <div class="form-group">
+      <label>Schedule</label>
+      <div class="schedule-cards">
+        <div *ngFor="let schedule of schedules; let i = index; trackBy: trackByIndex" class="schedule-card">
+          <p-card>
+            <ng-template pTemplate="content">
+              <div class="schedule-card-content">
+                <span>{{ schedule.description }}</span>
                 <p-calendar
-                    id="startDate"
-                    [(ngModel)]="event.startDate"
-                    name="startDate"
-                    dateFormat="yy-mm-dd"
-                    hourFormat="24"
+                  [(ngModel)]="schedule.time"
+                  name="scheduleTime{{ i }}"
+                  [showTime]="true"
+                  dateFormat="yy-mm-dd"
+                  hourFormat="24"
                 ></p-calendar>
-            </div>
-            <div class="form-group col-md-4">
-                <label for="endDate">End Date</label>
-                <p-calendar
-                    id="endDate"
-                    [(ngModel)]="event.endDate"
-                    name="endDate"
-                    dateFormat="yy-mm-dd"
-                    hourFormat="24"
-                ></p-calendar>
-            </div>
+                <button
+                  type="button"
+                  (click)="removeSchedule(i)"
+                  pButton
+                  icon="pi pi-times"
+                  class="remove-button"
+                ></button>
+              </div>
+            </ng-template>
+          </p-card>
         </div>
+      </div>
+    </div>
 
-        <!-- Schedule Section -->
-        <div class="form-group">
-            <label for="schedule">Schedule</label>
-            <div class="schedule-cards">
-                <div
-                    *ngFor="let schedule of schedules; let i = index; trackBy: trackByIndex"
-                    class="schedule-card"
-                >
-                    <p-card class="schedule-card-container">
-                        <ng-template pTemplate="header"> </ng-template>
-                        <ng-template pTemplate="content">
-                            <div class="schedule-card-content">
-                                <span>{{ schedule.description }}</span>
-                                <p-calendar
-                                    [(ngModel)]="schedule.time"
-                                    name="scheduleTime{{i}}"
-                                    [showTime]="true"
-                                    dateFormat="yy-mm-dd"
-                                    hourFormat="24"
-                                ></p-calendar>
-                                <button
-                                    type="button"
-                                    (click)="removeSchedule(i)"
-                                    pButton
-                                    icon="pi pi-times"
-                                    class="remove-button"
-                                ></button>
-                            </div>
-                        </ng-template>
-                    </p-card>
-                </div>
-            </div>
-        </div>
 
-        <!-- Custom Schedule Inputs-->
-        <div class="custom-schedule-box"></div>
-        <div
-            class="form-row"
-            style="
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                padding: 20px;
-                border-radius: 5px;
-            "
-        >
-            <div class="form-group col-md-6">
-                <label for="customScheduleDescription"
-                    >Schedule Description</label
-                >
-                <input
-                    type="text"
-                    pInputText
-                    id="customScheduleDescription"
-                    [(ngModel)]="customSchedule.description"
-                    name="customScheduleDescription"
-                    class="form-control"
-                />
-            </div>
-            <div class="form-group col-md-6">
-                <label for="customScheduleTime">Schedule Time</label>
-                <p-calendar
-                    id="customScheduleTime"
-                    [(ngModel)]="customSchedule.time"
-                    name="customScheduleTime"
-                    [showTime]="true"
-                    dateFormat="yy-mm-dd"
-                    hourFormat="24"
-                ></p-calendar>
-            </div>
-        </div>
+    <!-- Add Schedule -->
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="customScheduleDescription">Schedule Description</label>
+        <input
+          type="text"
+          pInputText
+          id="customScheduleDescription"
+          [(ngModel)]="customSchedule.description"
+          name="customScheduleDescription"
+          class="form-control"
+        />
+      </div>
+      <div class="form-group col-md-6">
+        <label for="customScheduleTime">Schedule Time</label>
+        <p-calendar
+          id="customScheduleTime"
+          [(ngModel)]="customSchedule.time"
+          name="customScheduleTime"
+          [showTime]="true"
+          dateFormat="yy-mm-dd"
+          hourFormat="24"
+        ></p-calendar>
+      </div>
+    </div>
 
-        <!-- Add and Submit Buttons -->
-        <div class="form-actions">
-            <button
-                type="button"
-                (click)="addCustomSchedule()"
-                pButton
-                label="Add Schedule"
-                icon="pi pi-plus"
-                class="add-button"
-            ></button>
-            <button
-                type="submit"
-                pButton
-                label="Submit"
-                icon="pi pi-check"
-                class="submit-button"
-            ></button>
-        </div>
-    </form>
+
+    <!-- Add and Submit Buttons -->
+    <div class="form-actions">
+  <button class="add-button"
+    type="button"
+    (click)="addCustomSchedule()"
+    pButton
+    label="Add Schedule"
+    icon="pi pi-plus"
+  ></button>
+  <button class="submit-button"
+    type="submit"
+    pButton
+    [label]="eventId ? 'Update Event' : 'Submit and send invitations'"
+    icon="pi pi-check"
+    [disabled]="isSubmitting"
+  ></button>
 </div>
+
+  </form>
+</div>
+</body>

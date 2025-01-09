@@ -1,13 +1,13 @@
 import { Schedule } from "./schedule.model";
-import { User } from "./user.model";
+import {Attendee} from './attendee.model';
 
-export interface Event {
-    eventId?: number;
+export interface AppEvent {
+    eventId?: string;
     name: string;
     startDate: Date;
     endDate: Date;
     location: string;
-    organizers?: User[];
-    attendees?: User[];
+    organizerUserEmail : string;
+    attendees?: Attendee[];
     schedule?: Schedule[];
 }
