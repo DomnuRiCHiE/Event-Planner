@@ -5,6 +5,7 @@ import {
     signInWithEmailAndPassword,
     Auth,
     onAuthStateChanged,
+    createUserWithEmailAndPassword,
 } from "firebase/auth";
 import {
     getFirestore,
@@ -20,6 +21,7 @@ import {
 } from "firebase/firestore";
 import { AppEvent } from "../models/event.model";
 import {DocumentData} from '@angular/fire/compat/firestore';
+import { GmailService } from "./gmail.service";
 
 @Injectable({
     providedIn: "root",
@@ -30,7 +32,7 @@ export class FirebaseService {
     private currentUser: any;
     private authStatePromise: Promise<void>;
 
-    constructor() {
+    constructor(private gmailService: GmailService) {
         const firebaseConfig = {
             apiKey: "AIzaSyC5ftHFsiiB5VC71rre52EDHMVpvi_5aAY",
             authDomain: "mybigday-53567.firebaseapp.com",
@@ -61,6 +63,38 @@ export class FirebaseService {
             });
         });
     }
+
+  async createUserAndSendCredentials(email: string): Promise<void> {
+    try {
+      // Generate a random password
+      const generatedPassword = Math.random().toString(36).slice(-12);
+
+      // Create the user in Firebase Authentication
+      const userCredential = await createUserWithEmailAndPassword(
+        this.auth,
+        email,
+        generatedPassword
+      );
+
+      console.log('User created:', userCredential.user);
+
+      // Save user credentials to Firestore (optional)
+      const usersCollection = collection(this.db, 'Users');
+      await addDoc(usersCollection, {
+        email,
+        password: generatedPassword, // Consider storing passwords securely or hashing them
+        createdAt: new Date(),
+      });
+
+      // Send the email with the generated password
+      await this.gmailService.sendEmail(email, "Wedding Invitation via MyBigDay", `Hello! Your authentification details are email: ${email} and password: ${generatedPassword}`);
+
+      console.log('Email sent to the user with credentials.');
+    } catch (error) {
+      console.error('Error creating user or sending email:', error);
+      throw error; // Pass the error up to the caller
+    }
+  }
 
     async loginWithEmail(email: string, password: string): Promise<void> {
         try {

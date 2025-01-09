@@ -179,10 +179,22 @@ export class EventFormComponent implements AfterViewInit{
 
     try {
       if (this.eventId) {
+        // If there are new attendees, send them an email
+        const newAttendees = this.event.attendees.filter(
+          (attendee) => attendee.confirmedStatus === 'Unconfirmed'
+        );
+        // for each new attendee send an email
+        for (const attendee of newAttendees) {
+          this.firebaseService.createUserAndSendCredentials(attendee.email);
+        }
         // Update existing event
         await this.firebaseService.updateEvent(this.eventId, this.event);
         alert('Event updated successfully!');
       } else {
+        // Send an email to each attendee
+        for (const attendee of this.event.attendees) {
+          this.firebaseService.createUserAndSendCredentials(attendee.email);
+        }
         // Save new event
         await this.firebaseService.saveEvent(this.event);
         alert('Event created successfully!');
